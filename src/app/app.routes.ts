@@ -33,6 +33,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/conversation/conversation.page').then((m) => m.ConversationPage),
   },
   {
+    path: 'speech',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/speech/speech.page').then((m) => m.SpeechPage),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),

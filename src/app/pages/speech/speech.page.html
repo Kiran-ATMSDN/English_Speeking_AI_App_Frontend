@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Speech To Text</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Upload Audio</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
+
+      @if (selectedFileName) {
+        <p><strong>Selected:</strong> {{ selectedFileName }}</p>
+      }
+
+      <ion-item>
+        <ion-label position="stacked">Transcribed Text</ion-label>
+        <ion-textarea [value]="transcribedText" rows="6" readonly="true"></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+
+      @if (message) {
+        <ion-text color="success" class="message">{{ message }}</ion-text>
+      }
+      @if (errorMessage) {
+        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>
