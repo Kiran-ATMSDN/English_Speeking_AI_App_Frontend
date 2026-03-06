@@ -12,7 +12,6 @@ import {
   IonHeader,
   IonItem,
   IonLabel,
-  IonText,
   IonTextarea,
   IonTitle,
   IonToolbar,
@@ -21,6 +20,7 @@ import { MentorResponse } from '../../core/models/api.models';
 import { MentorService } from '../../core/services/mentor.service';
 import { SpeechService } from '../../core/services/speech.service';
 import { getErrorMessage } from '../../core/utils/error.util';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-mentor',
@@ -39,7 +39,6 @@ import { getErrorMessage } from '../../core/utils/error.util';
     IonHeader,
     IonItem,
     IonLabel,
-    IonText,
     IonTextarea,
     IonTitle,
     IonToolbar,
@@ -47,8 +46,6 @@ import { getErrorMessage } from '../../core/utils/error.util';
 })
 export class MentorPage {
   loading = false;
-  errorMessage = '';
-  message = '';
   inputMessage = '';
   mentorResponse: MentorResponse | null = null;
   audioUrl = '';
@@ -57,22 +54,21 @@ export class MentorPage {
     private readonly mentorService: MentorService,
     private readonly speechService: SpeechService,
     private readonly router: Router,
+    private readonly notificationService: NotificationService,
   ) {}
 
   send(): void {
     this.loading = true;
-    this.errorMessage = '';
-    this.message = '';
     this.audioUrl = '';
 
     this.mentorService.chat(this.inputMessage.trim()).subscribe({
       next: (res) => {
         this.mentorResponse = res.data;
-        this.message = res.message;
+        void this.notificationService.success(res.message);
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to get mentor response.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to get mentor response.'));
         this.loading = false;
       },
     });
@@ -80,15 +76,15 @@ export class MentorPage {
 
   speak(text: string): void {
     this.loading = true;
-    this.errorMessage = '';
 
     this.speechService.textToSpeech(text).subscribe({
       next: (res) => {
         this.audioUrl = res.data.audioUrl;
+        void this.notificationService.info('Speech generated successfully.');
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to generate speech.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to generate speech.'));
         this.loading = false;
       },
     });

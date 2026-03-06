@@ -22,13 +22,6 @@
       </ion-item>
 
       <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
-
-      @if (message) {
-        <ion-text color="success" class="message">{{ message }}</ion-text>
-      }
-      @if (errorMessage) {
-        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
-      }
     </ion-card-content>
   </ion-card>
 </ion-content>

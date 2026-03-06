@@ -22,6 +22,7 @@ import { ConversationMessage } from '../../core/models/api.models';
 import { ConversationService } from '../../core/services/conversation.service';
 import { SpeechService } from '../../core/services/speech.service';
 import { getErrorMessage } from '../../core/utils/error.util';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-conversation',
@@ -50,8 +51,6 @@ import { getErrorMessage } from '../../core/utils/error.util';
 export class ConversationPage {
   loading = false;
   sessionId: number | null = null;
-  message = '';
-  errorMessage = '';
   inputMessage = '';
   history: ConversationMessage[] = [];
   transcribedText = '';
@@ -60,21 +59,21 @@ export class ConversationPage {
     private readonly conversationService: ConversationService,
     private readonly speechService: SpeechService,
     private readonly router: Router,
+    private readonly notificationService: NotificationService,
   ) {}
 
   startSession(): void {
     this.loading = true;
-    this.errorMessage = '';
 
     this.conversationService.startSession().subscribe({
       next: (res) => {
         this.sessionId = res.data.sessionId;
         this.history = [];
-        this.message = res.message;
+        void this.notificationService.success(res.message);
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to start session.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to start session.'));
         this.loading = false;
       },
     });
@@ -82,7 +81,7 @@ export class ConversationPage {
 
   sendMessage(): void {
     if (!this.sessionId) {
-      this.errorMessage = 'Start a conversation session first.';
+      void this.notificationService.info('Start a conversation session first.');
       return;
     }
 
@@ -92,8 +91,6 @@ export class ConversationPage {
     }
 
     this.loading = true;
-    this.errorMessage = '';
-    this.message = '';
 
     this.conversationService.sendMessage(this.sessionId, text).subscribe({
       next: (res) => {
@@ -102,11 +99,11 @@ export class ConversationPage {
           { role: 'user', message: text },
           { role: 'assistant', message: res.data.assistantMessage },
         );
-        this.message = res.message;
+        void this.notificationService.success(res.message);
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to send message.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to send message.'));
         this.loading = false;
       },
     });
@@ -121,10 +118,11 @@ export class ConversationPage {
     this.conversationService.getHistory(this.sessionId).subscribe({
       next: (res) => {
         this.history = res.data;
+        void this.notificationService.info('Conversation history loaded.');
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to fetch history.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to fetch history.'));
         this.loading = false;
       },
     });
@@ -145,10 +143,11 @@ export class ConversationPage {
       next: (res) => {
         this.transcribedText = res.data.text;
         this.inputMessage = res.data.text;
+        void this.notificationService.success('Audio transcribed successfully.');
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to transcribe audio.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to transcribe audio.'));
         this.loading = false;
       },
     });

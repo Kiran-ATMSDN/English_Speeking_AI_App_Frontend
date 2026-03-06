@@ -11,13 +11,13 @@ import {
   IonContent,
   IonHeader,
   IonList,
-  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { SubscriptionPlan } from '../../core/models/api.models';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { getErrorMessage } from '../../core/utils/error.util';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-subscriptions',
@@ -35,7 +35,6 @@ import { getErrorMessage } from '../../core/utils/error.util';
     IonContent,
     IonHeader,
     IonList,
-    IonText,
     IonTitle,
     IonToolbar,
   ],
@@ -44,12 +43,11 @@ export class SubscriptionsPage implements OnInit {
   plans: SubscriptionPlan[] = [];
   currentPlan: SubscriptionPlan | null = null;
   loading = false;
-  message = '';
-  errorMessage = '';
 
   constructor(
     private readonly subscriptionService: SubscriptionService,
     private readonly router: Router,
+    private readonly notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +56,6 @@ export class SubscriptionsPage implements OnInit {
 
   loadData(): void {
     this.loading = true;
-    this.errorMessage = '';
 
     this.subscriptionService.getPlans().subscribe({
       next: (res) => {
@@ -66,7 +63,7 @@ export class SubscriptionsPage implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to load plans.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to load plans.'));
         this.loading = false;
       },
     });
@@ -80,17 +77,15 @@ export class SubscriptionsPage implements OnInit {
 
   select(plan: SubscriptionPlan): void {
     this.loading = true;
-    this.message = '';
-    this.errorMessage = '';
 
     this.subscriptionService.selectPlan({ planId: plan.id }).subscribe({
       next: (res) => {
         this.currentPlan = res.data;
-        this.message = res.message;
+        void this.notificationService.success(res.message);
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to select plan.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to select plan.'));
         this.loading = false;
       },
     });

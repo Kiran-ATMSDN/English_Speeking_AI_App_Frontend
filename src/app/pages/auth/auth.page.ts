@@ -21,6 +21,7 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '../../core/services/auth.service';
 import { getErrorMessage } from '../../core/utils/error.util';
+import { NotificationService } from '../../core/services/notification.service';
 
 type AuthMode = 'login' | 'signup' | 'otp';
 
@@ -52,8 +53,6 @@ type AuthMode = 'login' | 'signup' | 'otp';
 export class AuthPage {
   mode: AuthMode = 'login';
   loading = false;
-  errorMessage = '';
-  successMessage = '';
 
   fullName = '';
   email = '';
@@ -65,28 +64,25 @@ export class AuthPage {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
+    private readonly notificationService: NotificationService,
   ) {}
 
   onModeChange(value: string | number | undefined): void {
     this.mode = (value as AuthMode) || 'login';
-    this.errorMessage = '';
-    this.successMessage = '';
   }
 
   submit(): void {
     this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     if (this.mode === 'login') {
       this.authService.login({ mobileNumber: this.mobileNumber.trim() }).subscribe({
         next: (res) => {
-          this.successMessage = res.message;
+          void this.notificationService.success(res.message);
           this.loading = false;
           this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {
-          this.errorMessage = getErrorMessage(err, 'Login failed.');
+          void this.notificationService.error(getErrorMessage(err, 'Login failed.'));
           this.loading = false;
         },
       });
@@ -103,12 +99,12 @@ export class AuthPage {
         })
         .subscribe({
           next: (res) => {
-            this.successMessage = res.message;
+            void this.notificationService.success(res.message);
             this.loading = false;
             this.router.navigateByUrl('/dashboard');
           },
           error: (err) => {
-            this.errorMessage = getErrorMessage(err, 'Signup failed.');
+            void this.notificationService.error(getErrorMessage(err, 'Signup failed.'));
             this.loading = false;
           },
         });
@@ -117,12 +113,12 @@ export class AuthPage {
 
     this.authService.verifyOtp({ mobileNumber: this.mobileNumber.trim(), otp: this.otp.trim() }).subscribe({
       next: (res) => {
-        this.successMessage = res.message;
+        void this.notificationService.success(res.message);
         this.loading = false;
         this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'OTP verification failed.');
+        void this.notificationService.error(getErrorMessage(err, 'OTP verification failed.'));
         this.loading = false;
       },
     });
@@ -130,8 +126,6 @@ export class AuthPage {
 
   sendOtp(): void {
     this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     this.authService
       .sendOtp({
@@ -143,11 +137,13 @@ export class AuthPage {
       .subscribe({
         next: (res) => {
           this.lastOtpPreview = res.data.otp || '';
-          this.successMessage = `${res.message} Expires: ${new Date(res.data.expiresAt).toLocaleString()}`;
+          void this.notificationService.info(
+            `${res.message} Expires: ${new Date(res.data.expiresAt).toLocaleString()}`,
+          );
           this.loading = false;
         },
         error: (err) => {
-          this.errorMessage = getErrorMessage(err, 'Failed to send OTP.');
+          void this.notificationService.error(getErrorMessage(err, 'Failed to send OTP.'));
           this.loading = false;
         },
       });

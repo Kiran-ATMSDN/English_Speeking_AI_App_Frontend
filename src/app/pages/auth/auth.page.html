@@ -57,12 +57,6 @@
         {{ loading ? 'Please wait...' : 'Submit' }}
       </ion-button>
 
-      @if (successMessage) {
-        <ion-text color="success" class="message">{{ successMessage }}</ion-text>
-      }
-      @if (errorMessage) {
-        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
-      }
       @if (lastOtpPreview) {
         <ion-text color="medium" class="message">Dev OTP Preview: {{ lastOtpPreview }}</ion-text>
       }

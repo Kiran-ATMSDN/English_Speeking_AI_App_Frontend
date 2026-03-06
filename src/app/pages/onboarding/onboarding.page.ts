@@ -20,6 +20,7 @@ import {
 import { OnboardingService } from '../../core/services/onboarding.service';
 import { OnboardingQuestion } from '../../core/models/api.models';
 import { getErrorMessage } from '../../core/utils/error.util';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-onboarding',
@@ -48,12 +49,11 @@ export class OnboardingPage implements OnInit {
   loading = false;
   question: OnboardingQuestion | null = null;
   answerText = '';
-  message = '';
-  errorMessage = '';
 
   constructor(
     private readonly onboardingService: OnboardingService,
     private readonly router: Router,
+    private readonly notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class OnboardingPage implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = getErrorMessage(err, 'Failed to load onboarding question.');
+        void this.notificationService.error(getErrorMessage(err, 'Failed to load onboarding question.'));
         this.loading = false;
       },
     });
@@ -80,8 +80,6 @@ export class OnboardingPage implements OnInit {
     }
 
     this.loading = true;
-    this.message = '';
-    this.errorMessage = '';
 
     this.onboardingService
       .saveAnswer({
@@ -91,11 +89,11 @@ export class OnboardingPage implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          this.message = res.message;
+          void this.notificationService.success(res.message);
           this.loading = false;
         },
         error: (err) => {
-          this.errorMessage = getErrorMessage(err, 'Failed to save onboarding answer.');
+          void this.notificationService.error(getErrorMessage(err, 'Failed to save onboarding answer.'));
           this.loading = false;
         },
       });

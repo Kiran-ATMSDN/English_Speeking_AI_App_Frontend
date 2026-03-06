@@ -25,13 +25,6 @@
       <ion-button expand="block" class="ion-margin-top" (click)="save()" [disabled]="loading">Save</ion-button>
       <ion-button expand="block" fill="outline" (click)="fetchProfile()" [disabled]="loading">Refresh</ion-button>
       <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
-
-      @if (message) {
-        <ion-text color="success" class="message">{{ message }}</ion-text>
-      }
-      @if (errorMessage) {
-        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
-      }
     </ion-card-content>
   </ion-card>
 </ion-content>
