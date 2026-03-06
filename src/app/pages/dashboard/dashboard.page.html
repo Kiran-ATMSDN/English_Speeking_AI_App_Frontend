@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Backend Flow Navigation</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="go('/onboarding')">Onboarding</ion-button>
+      <ion-button expand="block" (click)="go('/subscriptions')">Subscriptions</ion-button>
+      <ion-button expand="block" (click)="go('/mentor')">AI Mentor Chat</ion-button>
+      <ion-button expand="block" (click)="go('/conversation')">Conversation Session</ion-button>
+      <ion-button expand="block" (click)="go('/profile')">Profile</ion-button>
+      <ion-button expand="block" fill="outline" color="danger" (click)="logout()">Logout</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

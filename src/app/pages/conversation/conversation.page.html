@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Conversation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Session</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="startSession()" [disabled]="loading">Start New Session</ion-button>
+      <ion-button expand="block" fill="outline" (click)="loadHistory()" [disabled]="!sessionId || loading">
+        Load History
+      </ion-button>
+      <ion-text>Session ID: {{ sessionId || '-' }}</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Send Message</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Message</ion-label>
+        <ion-textarea rows="3" [(ngModel)]="inputMessage"></ion-textarea>
+      </ion-item>
+      <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
+      @if (transcribedText) {
+        <p><strong>Transcribed:</strong> {{ transcribedText }}</p>
+      }
+      <ion-button expand="block" class="ion-margin-top" (click)="sendMessage()" [disabled]="loading">
+        Send
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    @for (item of history; track $index) {
+      <ion-item>
+        <ion-label>
+          <h3>{{ item.role }}</h3>
+          <p>{{ item.message }}</p>
+        </ion-label>
+      </ion-item>
+    }
+  </ion-list>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+  @if (message) {
+    <ion-text color="success" class="message">{{ message }}</ion-text>
+  }
+  @if (errorMessage) {
+    <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+  }
+</ion-content>

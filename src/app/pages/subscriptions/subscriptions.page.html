@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Subscriptions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (currentPlan) {
+    <ion-card color="light">
+      <ion-card-header>
+        <ion-card-subtitle>Current Plan</ion-card-subtitle>
+        <ion-card-title>{{ currentPlan.name }} - INR {{ currentPlan.priceInr }}</ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  }
+
+  <ion-list>
+    @for (plan of plans; track plan.id) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ plan.name }} - INR {{ plan.priceInr }}</ion-card-title>
+          <ion-card-subtitle>{{ plan.billingCycle }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ plan.benefitSummary }}</p>
+          <ion-button expand="block" (click)="select(plan)" [disabled]="loading">Select</ion-button>
+        </ion-card-content>
+      </ion-card>
+    }
+  </ion-list>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+  @if (message) {
+    <ion-text color="success" class="message">{{ message }}</ion-text>
+  }
+  @if (errorMessage) {
+    <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+  }
+</ion-content>

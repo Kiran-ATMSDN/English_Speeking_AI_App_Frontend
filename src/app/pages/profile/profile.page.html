@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>My Profile</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Full Name</ion-label>
+        <ion-input [(ngModel)]="fullName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Learning Purpose</ion-label>
+        <ion-textarea rows="3" [(ngModel)]="learningPurpose"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" class="ion-margin-top" (click)="save()" [disabled]="loading">Save</ion-button>
+      <ion-button expand="block" fill="outline" (click)="fetchProfile()" [disabled]="loading">Refresh</ion-button>
+      <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+
+      @if (message) {
+        <ion-text color="success" class="message">{{ message }}</ion-text>
+      }
+      @if (errorMessage) {
+        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>

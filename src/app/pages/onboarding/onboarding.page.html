@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Onboarding</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Learning Purpose</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      @if (question) {
+        <ion-item lines="none">
+          <ion-label>{{ question.questionText }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Answer</ion-label>
+          <ion-textarea rows="4" [(ngModel)]="answerText"></ion-textarea>
+        </ion-item>
+        <ion-button expand="block" class="ion-margin-top" (click)="saveAnswer()" [disabled]="loading">
+          Save Answer
+        </ion-button>
+      } @else {
+        <ion-text>No question found.</ion-text>
+      }
+
+      <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+
+      @if (message) {
+        <ion-text color="success" class="message">{{ message }}</ion-text>
+      }
+      @if (errorMessage) {
+        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>AI Mentor</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Send Sentence</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Your Sentence</ion-label>
+        <ion-textarea rows="4" [(ngModel)]="inputMessage"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" class="ion-margin-top" (click)="send()" [disabled]="loading">
+        Get Correction
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  @if (mentorResponse) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mentor Response</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Correction:</strong> {{ mentorResponse.correction }}</p>
+        <p><strong>Explanation:</strong> {{ mentorResponse.explanation }}</p>
+        <p><strong>Next Question:</strong> {{ mentorResponse.nextQuestion }}</p>
+        <ion-button expand="block" fill="outline" (click)="speak(mentorResponse.nextQuestion)">
+          Listen To Next Question
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  }
+
+  @if (audioUrl) {
+    <audio [src]="audioUrl" controls></audio>
+  }
+
+  <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+  @if (message) {
+    <ion-text color="success" class="message">{{ message }}</ion-text>
+  }
+  @if (errorMessage) {
+    <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+  }
+</ion-content>

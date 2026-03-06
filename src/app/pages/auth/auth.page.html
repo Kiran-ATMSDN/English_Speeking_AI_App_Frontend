@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>English Speaking AI</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Auth</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-segment [value]="mode" (ionChange)="onModeChange($event.detail.value)">
+        <ion-segment-button value="login">
+          <ion-label>Login</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="signup">
+          <ion-label>Signup</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="otp">
+          <ion-label>OTP</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-item>
+        <ion-label position="stacked">Country Code</ion-label>
+        <ion-input [(ngModel)]="countryCode" placeholder="+91"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Mobile Number</ion-label>
+        <ion-input [(ngModel)]="mobileNumber" placeholder="9876543210"></ion-input>
+      </ion-item>
+
+      @if (mode === 'signup' || mode === 'otp') {
+        <ion-item>
+          <ion-label position="stacked">Full Name (for signup / otp send)</ion-label>
+          <ion-input [(ngModel)]="fullName" placeholder="Your name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Email (optional)</ion-label>
+          <ion-input [(ngModel)]="email" type="email" placeholder="you@mail.com"></ion-input>
+        </ion-item>
+      }
+
+      @if (mode === 'otp') {
+        <ion-item>
+          <ion-label position="stacked">OTP</ion-label>
+          <ion-input [(ngModel)]="otp" placeholder="6 digit code"></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="ion-margin-top" (click)="sendOtp()" [disabled]="loading">
+          Send OTP
+        </ion-button>
+      }
+
+      <ion-button expand="block" class="ion-margin-top" (click)="submit()" [disabled]="loading">
+        {{ loading ? 'Please wait...' : 'Submit' }}
+      </ion-button>
+
+      @if (successMessage) {
+        <ion-text color="success" class="message">{{ successMessage }}</ion-text>
+      }
+      @if (errorMessage) {
+        <ion-text color="danger" class="message">{{ errorMessage }}</ion-text>
+      }
+      @if (lastOtpPreview) {
+        <ion-text color="medium" class="message">Dev OTP Preview: {{ lastOtpPreview }}</ion-text>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>
