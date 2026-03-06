@@ -51,7 +51,7 @@ export class SpeechPage {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async onAudioSelected(event: Event): Promise<void> {
+  onAudioSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) {
@@ -61,37 +61,20 @@ export class SpeechPage {
     this.selectedFileName = file.name;
     this.loading = true;
 
-    try {
-      const base64 = await this.fileToBase64(file);
-      const cleanBase64 = base64.split(',')[1] || '';
-
-      this.speechService.speechToText(cleanBase64, file.type || 'audio/mpeg').subscribe({
-        next: (res) => {
-          this.transcribedText = res.data.text;
-          void this.notificationService.success(res.message);
-          this.loading = false;
-        },
-        error: (err) => {
-          void this.notificationService.error(getErrorMessage(err, 'Failed to transcribe speech.'));
-          this.loading = false;
-        },
-      });
-    } catch {
-      void this.notificationService.error('Failed to read selected audio file.');
-      this.loading = false;
-    }
+    this.speechService.speechToText(file).subscribe({
+      next: (res) => {
+        this.transcribedText = res.data.text;
+        void this.notificationService.success(res.message);
+        this.loading = false;
+      },
+      error: (err) => {
+        void this.notificationService.error(getErrorMessage(err, 'Failed to transcribe speech.'));
+        this.loading = false;
+      },
+    });
   }
 
   back(): void {
     this.router.navigateByUrl('/dashboard');
-  }
-
-  private fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
   }
 }

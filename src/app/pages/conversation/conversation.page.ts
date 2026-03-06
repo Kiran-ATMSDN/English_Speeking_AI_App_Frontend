@@ -128,18 +128,15 @@ export class ConversationPage {
     });
   }
 
-  async onAudioSelected(event: Event): Promise<void> {
+  onAudioSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) {
       return;
     }
 
-    const base64 = await this.fileToBase64(file);
-    const cleanBase64 = base64.split(',')[1] || '';
-
     this.loading = true;
-    this.speechService.speechToText(cleanBase64, file.type || 'audio/mpeg').subscribe({
+    this.speechService.speechToText(file).subscribe({
       next: (res) => {
         this.transcribedText = res.data.text;
         this.inputMessage = res.data.text;
@@ -155,14 +152,5 @@ export class ConversationPage {
 
   back(): void {
     this.router.navigateByUrl('/dashboard');
-  }
-
-  private fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
   }
 }

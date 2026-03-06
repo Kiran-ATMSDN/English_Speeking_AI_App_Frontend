@@ -1,13 +1,25 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { ApiService } from './api.service';
-import { SpeechToTextPayload, TextToSpeechPayload } from '../models/api.models';
+import { ApiResponse, SpeechToTextPayload, TextToSpeechPayload } from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
-  constructor(private readonly api: ApiService) {}
+  private readonly baseUrl = environment.apiBaseUrl;
 
-  speechToText(audioBase64: string, mimeType: string) {
-    return this.api.post<SpeechToTextPayload>('/speech/speech-to-text', { audioBase64, mimeType });
+  constructor(
+    private readonly api: ApiService,
+    private readonly http: HttpClient,
+  ) {}
+
+  speechToText(file: File) {
+    const mimeType = file.type || 'application/octet-stream';
+    return this.http.post<ApiResponse<SpeechToTextPayload>>(`${this.baseUrl}/speech/speech-to-text`, file, {
+      headers: new HttpHeaders({
+        'Content-Type': mimeType,
+      }),
+    });
   }
 
   textToSpeech(text: string) {
