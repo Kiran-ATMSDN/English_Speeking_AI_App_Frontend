@@ -38,6 +38,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/speech/speech.page').then((m) => m.SpeechPage),
   },
   {
+    path: 'daily-vocabulary',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/daily-vocabulary/daily-vocabulary.page').then((m) => m.DailyVocabularyPage),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),

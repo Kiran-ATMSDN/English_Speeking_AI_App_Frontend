@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Daily Vocabulary</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>100 Days Vocabulary Challenge</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
+      <br />
+      <ion-note>Showing {{ words.length }} words for {{ todayLabel }}</ion-note>
+      <div class="day-controls">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          Previous Day
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="goToToday()" [disabled]="loading">
+          Today
+        </ion-button>
+        <ion-button
+          size="small"
+          fill="outline"
+          (click)="nextDay()"
+          [disabled]="loading || currentDay >= totalDays"
+        >
+          Next Day
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let item of words">
+      <ion-label>
+        <h2>Word: {{ item.word }}</h2>
+        <p><strong>Meaning (English):</strong> {{ item.meaningEn }}</p>
+        <p><strong>Meaning (Hindi):</strong> {{ item.meaningHi }}</p>
+        <p><strong>Example:</strong> {{ item.example }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+</ion-content>

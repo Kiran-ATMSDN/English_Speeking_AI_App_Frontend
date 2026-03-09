@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { OnboardingAnswer, OnboardingQuestion } from '../models/api.models';
+import { DailyVocabularyPayload, OnboardingAnswer, OnboardingQuestion } from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class OnboardingService {
@@ -20,5 +20,10 @@ export class OnboardingService {
 
   getMyAnswers() {
     return this.api.get<OnboardingAnswer[]>('/onboarding/answers');
+  }
+
+  getDailyVocabulary(day?: number) {
+    const path = day ? `/onboarding/daily-vocabulary?day=${day}` : '/onboarding/daily-vocabulary';
+    return this.api.get<DailyVocabularyPayload>(path);
   }
 }

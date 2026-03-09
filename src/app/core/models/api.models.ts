@@ -44,6 +44,22 @@ export interface OnboardingAnswer {
   createdAt: string;
 }
 
+export interface DailyVocabularyWord {
+  word: string;
+  meaningEn: string;
+  meaningHi: string;
+  example: string;
+}
+
+export interface DailyVocabularyPayload {
+  dayNumber: number;
+  totalDays: number;
+  wordsPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  words: DailyVocabularyWord[];
+}
+
 export interface SubscriptionPlan {
   id: number;
   name: string;
