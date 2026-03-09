@@ -16,7 +16,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { DailyVocabularyWord } from '../../core/models/api.models';
+import { GrammarLesson } from '../../core/models/api.models';
 import { OnboardingService } from '../../core/services/onboarding.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { getErrorMessage } from '../../core/utils/error.util';
@@ -24,9 +24,9 @@ import { getErrorMessage } from '../../core/utils/error.util';
 type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
 
 @Component({
-  selector: 'app-daily-vocabulary',
-  templateUrl: './daily-vocabulary.page.html',
-  styleUrls: ['./daily-vocabulary.page.scss'],
+  selector: 'app-grammar-lessons',
+  templateUrl: './grammar-lessons.page.html',
+  styleUrls: ['./grammar-lessons.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -45,19 +45,19 @@ type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
     IonToolbar,
   ],
 })
-export class DailyVocabularyPage implements OnInit {
-  words: DailyVocabularyWord[] = [];
+export class GrammarLessonsPage implements OnInit {
   dayNumber = 1;
   currentDay = 1;
+  totalDays = 1;
   level: DifficultyLevel = 'Simple';
-  totalDays = 100;
   loading = false;
-  speakingAll = false;
-  readonly todayLabel = new Date().toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  speakingLesson = false;
+  lesson: GrammarLesson = {
+    title: '',
+    explanation: '',
+    formula: '',
+    examples: [],
+  };
 
   constructor(
     private readonly router: Router,
@@ -71,7 +71,7 @@ export class DailyVocabularyPage implements OnInit {
 
   ionViewWillEnter(): void {
     this.currentDay = 1;
-    this.fetchDailyVocabulary(1);
+    this.fetchLesson(1);
   }
 
   back(): void {
@@ -82,75 +82,74 @@ export class DailyVocabularyPage implements OnInit {
     if (this.currentDay <= 1 || this.loading) {
       return;
     }
-    this.fetchDailyVocabulary(this.currentDay - 1);
+    this.fetchLesson(this.currentDay - 1);
   }
 
   nextDay(): void {
     if (this.currentDay >= this.totalDays || this.loading) {
       return;
     }
-    this.fetchDailyVocabulary(this.currentDay + 1);
+    this.fetchLesson(this.currentDay + 1);
   }
 
-  goToToday(): void {
+  goToDayOne(): void {
     if (this.loading) {
       return;
     }
     this.currentDay = 1;
-    this.fetchDailyVocabulary(1);
+    this.fetchLesson(1);
   }
 
-  speakWord(item: DailyVocabularyWord): void {
-    const word = String(item?.word || '').trim();
-    if (!word) {
-      return;
-    }
-
+  speakLesson(): void {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
       return;
     }
 
-    const speechText = `Word. ${word}. Meaning in English. ${item.meaningEn}. Meaning in Hindi. ${item.meaningHi}. Example. ${item.example}.`;
+    if (!this.lesson.title) {
+      return;
+    }
+
+    const examplesText = (this.lesson.examples || [])
+      .map((x, i) => `Example ${i + 1}. ${x}`)
+      .join(' ');
+    const speechText = `Lesson title. ${this.lesson.title}. Explanation. ${this.lesson.explanation}. Formula. ${
+      this.lesson.formula || 'Not available'
+    }. ${examplesText}`;
+
     const utterance = new SpeechSynthesisUtterance(speechText);
     utterance.lang = 'en-US';
     utterance.rate = 0.95;
+    utterance.onstart = () => {
+      this.speakingLesson = true;
+    };
+    utterance.onend = () => {
+      this.speakingLesson = false;
+    };
+    utterance.onerror = () => {
+      this.speakingLesson = false;
+    };
 
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   }
 
-  speakAllDetails(): void {
+  speakExample(example: string): void {
+    const text = String(example || '').trim();
+    if (!text) {
+      return;
+    }
+
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
       return;
     }
 
-    if (!this.words.length) {
-      return;
-    }
-
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.95;
     window.speechSynthesis.cancel();
-    this.speakingAll = true;
-
-    this.words.forEach((item, index) => {
-      const utterance = new SpeechSynthesisUtterance(
-        `Word ${index + 1}. ${item.word}. Meaning. ${item.meaningEn}. Example. ${item.example}`,
-      );
-      utterance.lang = 'en-US';
-      utterance.rate = 0.95;
-
-      if (index === this.words.length - 1) {
-        utterance.onend = () => {
-          this.speakingAll = false;
-        };
-        utterance.onerror = () => {
-          this.speakingAll = false;
-        };
-      }
-
-      window.speechSynthesis.speak(utterance);
-    });
+    window.speechSynthesis.speak(utterance);
   }
 
   stopSpeaking(): void {
@@ -158,25 +157,25 @@ export class DailyVocabularyPage implements OnInit {
       return;
     }
     window.speechSynthesis.cancel();
-    this.speakingAll = false;
+    this.speakingLesson = false;
   }
 
-  private fetchDailyVocabulary(day?: number): void {
+  private fetchLesson(day?: number): void {
     const requestedDay = day ?? 1;
     this.loading = true;
-    this.onboardingService.getDailyVocabulary(requestedDay).subscribe({
+    this.onboardingService.getGrammarLessons(requestedDay).subscribe({
       next: (res) => {
         this.dayNumber = res.data.dayNumber;
         this.currentDay = res.data.dayNumber;
         this.totalDays = res.data.totalDays;
         this.level = res.data.level;
-        this.words = res.data.words || [];
+        this.lesson = res.data.lesson;
         this.loading = false;
       },
       error: (error) => {
         this.loading = false;
         void this.notificationService.error(
-          getErrorMessage(error, 'Failed to load daily vocabulary.'),
+          getErrorMessage(error, 'Failed to load grammar lesson.'),
         );
       },
     });

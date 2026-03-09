@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Grammar Lessons</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Grammar Lessons</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
+      <div class="day-controls">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          Previous Day
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">
+          Day 1
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next Day
+        </ion-button>
+      </div>
+      <div class="day-controls">
+        <ion-button size="small" (click)="speakLesson()" [disabled]="loading || !lesson.title || speakingLesson">
+          Speak Lesson
+        </ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingLesson">
+          Stop
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ lesson.title }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Explanation:</strong> {{ lesson.explanation }}</p>
+      @if (lesson.formula) {
+        <p><strong>Formula:</strong> {{ lesson.formula }}</p>
+      }
+      <p><strong>Examples:</strong></p>
+      <ion-list>
+        <ion-item *ngFor="let ex of lesson.examples">
+          <ion-label>{{ ex }}</ion-label>
+          <ion-button slot="end" fill="clear" size="small" (click)="speakExample(ex)">Speak</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+</ion-content>

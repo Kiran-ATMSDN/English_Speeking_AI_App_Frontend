@@ -14,6 +14,14 @@
       <br />
       <ion-note>Showing {{ words.length }} words for {{ todayLabel }}</ion-note>
       <div class="day-controls">
+        <ion-button size="small" (click)="speakAllDetails()" [disabled]="loading || speakingAll || words.length === 0">
+          Speak All
+        </ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">
+          Stop
+        </ion-button>
+      </div>
+      <div class="day-controls">
         <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
           Previous Day
         </ion-button>
@@ -40,6 +48,7 @@
         <p><strong>Meaning (Hindi):</strong> {{ item.meaningHi }}</p>
         <p><strong>Example:</strong> {{ item.example }}</p>
       </ion-label>
+      <ion-button slot="end" fill="clear" size="small" (click)="speakWord(item)">Speak</ion-button>
     </ion-item>
   </ion-list>
 

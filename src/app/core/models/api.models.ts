@@ -60,6 +60,68 @@ export interface DailyVocabularyPayload {
   words: DailyVocabularyWord[];
 }
 
+export interface GrammarLesson {
+  title: string;
+  explanation: string;
+  formula?: string | null;
+  examples: string[];
+}
+
+export interface GrammarLessonPayload {
+  dayNumber: number;
+  totalDays: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  lesson: GrammarLesson;
+}
+
+export interface CommonSentence {
+  sentence: string;
+  meaningHi: string;
+  usageTip?: string | null;
+}
+
+export interface CommonSentencesPayload {
+  dayNumber: number;
+  totalDays: number;
+  sentencesPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  sentences: CommonSentence[];
+}
+
+export interface ConversationScriptLine {
+  speaker: string;
+  text: string;
+}
+
+export interface ConversationScript {
+  title: string;
+  context: string;
+  lines: ConversationScriptLine[];
+}
+
+export interface ConversationScriptPayload {
+  dayNumber: number;
+  totalDays: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  script: ConversationScript;
+}
+
+export interface PronunciationTip {
+  title: string;
+  guide: string;
+  example: string;
+}
+
+export interface PronunciationTipsPayload {
+  dayNumber: number;
+  totalDays: number;
+  tipsPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  tips: PronunciationTip[];
+}
+
 export interface SubscriptionPlan {
   id: number;
   name: string;

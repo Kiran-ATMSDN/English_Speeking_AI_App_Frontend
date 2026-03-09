@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { DailyVocabularyPayload, OnboardingAnswer, OnboardingQuestion } from '../models/api.models';
+import {
+  DailyVocabularyPayload,
+  GrammarLessonPayload,
+  CommonSentencesPayload,
+  ConversationScriptPayload,
+  PronunciationTipsPayload,
+  OnboardingAnswer,
+  OnboardingQuestion,
+} from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class OnboardingService {
@@ -25,5 +33,25 @@ export class OnboardingService {
   getDailyVocabulary(day?: number) {
     const path = day ? `/onboarding/daily-vocabulary?day=${day}` : '/onboarding/daily-vocabulary';
     return this.api.get<DailyVocabularyPayload>(path);
+  }
+
+  getGrammarLessons(day?: number) {
+    const path = day ? `/onboarding/grammar-lessons?day=${day}` : '/onboarding/grammar-lessons';
+    return this.api.get<GrammarLessonPayload>(path);
+  }
+
+  getCommonSentences(day?: number) {
+    const path = day ? `/onboarding/common-sentences?day=${day}` : '/onboarding/common-sentences';
+    return this.api.get<CommonSentencesPayload>(path);
+  }
+
+  getConversationScripts(day?: number) {
+    const path = day ? `/onboarding/conversation-scripts?day=${day}` : '/onboarding/conversation-scripts';
+    return this.api.get<ConversationScriptPayload>(path);
+  }
+
+  getPronunciationTips(day?: number) {
+    const path = day ? `/onboarding/pronunciation-tips?day=${day}` : '/onboarding/pronunciation-tips';
+    return this.api.get<PronunciationTipsPayload>(path);
   }
 }

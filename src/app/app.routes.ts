@@ -44,6 +44,30 @@ export const routes: Routes = [
       import('./pages/daily-vocabulary/daily-vocabulary.page').then((m) => m.DailyVocabularyPage),
   },
   {
+    path: 'grammar-lessons',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/grammar-lessons/grammar-lessons.page').then((m) => m.GrammarLessonsPage),
+  },
+  {
+    path: 'common-sentences',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/common-sentences/common-sentences.page').then((m) => m.CommonSentencesPage),
+  },
+  {
+    path: 'conversation-scripts',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/conversation-scripts/conversation-scripts.page').then((m) => m.ConversationScriptsPage),
+  },
+  {
+    path: 'pronunciation-tips',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/pronunciation-tips/pronunciation-tips.page').then((m) => m.PronunciationTipsPage),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),

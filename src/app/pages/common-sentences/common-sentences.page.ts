@@ -16,7 +16,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { DailyVocabularyWord } from '../../core/models/api.models';
+import { CommonSentence } from '../../core/models/api.models';
 import { OnboardingService } from '../../core/services/onboarding.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { getErrorMessage } from '../../core/utils/error.util';
@@ -24,9 +24,9 @@ import { getErrorMessage } from '../../core/utils/error.util';
 type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
 
 @Component({
-  selector: 'app-daily-vocabulary',
-  templateUrl: './daily-vocabulary.page.html',
-  styleUrls: ['./daily-vocabulary.page.scss'],
+  selector: 'app-common-sentences',
+  templateUrl: './common-sentences.page.html',
+  styleUrls: ['./common-sentences.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -45,19 +45,14 @@ type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
     IonToolbar,
   ],
 })
-export class DailyVocabularyPage implements OnInit {
-  words: DailyVocabularyWord[] = [];
+export class CommonSentencesPage implements OnInit {
+  sentences: CommonSentence[] = [];
   dayNumber = 1;
   currentDay = 1;
-  level: DifficultyLevel = 'Simple';
   totalDays = 100;
+  level: DifficultyLevel = 'Simple';
   loading = false;
   speakingAll = false;
-  readonly todayLabel = new Date().toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
 
   constructor(
     private readonly router: Router,
@@ -71,7 +66,7 @@ export class DailyVocabularyPage implements OnInit {
 
   ionViewWillEnter(): void {
     this.currentDay = 1;
-    this.fetchDailyVocabulary(1);
+    this.fetchSentences(1);
   }
 
   back(): void {
@@ -82,65 +77,47 @@ export class DailyVocabularyPage implements OnInit {
     if (this.currentDay <= 1 || this.loading) {
       return;
     }
-    this.fetchDailyVocabulary(this.currentDay - 1);
+    this.fetchSentences(this.currentDay - 1);
   }
 
   nextDay(): void {
     if (this.currentDay >= this.totalDays || this.loading) {
       return;
     }
-    this.fetchDailyVocabulary(this.currentDay + 1);
+    this.fetchSentences(this.currentDay + 1);
   }
 
-  goToToday(): void {
+  goToDayOne(): void {
     if (this.loading) {
       return;
     }
     this.currentDay = 1;
-    this.fetchDailyVocabulary(1);
+    this.fetchSentences(1);
   }
 
-  speakWord(item: DailyVocabularyWord): void {
-    const word = String(item?.word || '').trim();
-    if (!word) {
-      return;
-    }
-
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
-      return;
-    }
-
-    const speechText = `Word. ${word}. Meaning in English. ${item.meaningEn}. Meaning in Hindi. ${item.meaningHi}. Example. ${item.example}.`;
-    const utterance = new SpeechSynthesisUtterance(speechText);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.95;
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+  speakSentence(item: CommonSentence): void {
+    const speechText = `Sentence. ${item.sentence}. Hindi meaning. ${item.meaningHi}. Usage tip. ${
+      item.usageTip || 'Use this sentence in daily conversation.'
+    }`;
+    this.speak(speechText);
   }
 
-  speakAllDetails(): void {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
+  speakAll(): void {
+    if (!this.sentences.length) {
       return;
     }
-
-    if (!this.words.length) {
-      return;
-    }
-
-    window.speechSynthesis.cancel();
+    this.stopSpeaking();
     this.speakingAll = true;
 
-    this.words.forEach((item, index) => {
+    this.sentences.forEach((item, index) => {
       const utterance = new SpeechSynthesisUtterance(
-        `Word ${index + 1}. ${item.word}. Meaning. ${item.meaningEn}. Example. ${item.example}`,
+        `Sentence ${index + 1}. ${item.sentence}. Hindi meaning. ${item.meaningHi}. Usage tip. ${
+          item.usageTip || 'Use this sentence in daily conversation.'
+        }`,
       );
       utterance.lang = 'en-US';
       utterance.rate = 0.95;
-
-      if (index === this.words.length - 1) {
+      if (index === this.sentences.length - 1) {
         utterance.onend = () => {
           this.speakingAll = false;
         };
@@ -148,7 +125,6 @@ export class DailyVocabularyPage implements OnInit {
           this.speakingAll = false;
         };
       }
-
       window.speechSynthesis.speak(utterance);
     });
   }
@@ -161,22 +137,34 @@ export class DailyVocabularyPage implements OnInit {
     this.speakingAll = false;
   }
 
-  private fetchDailyVocabulary(day?: number): void {
+  private speak(text: string): void {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.95;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+
+  private fetchSentences(day?: number): void {
     const requestedDay = day ?? 1;
     this.loading = true;
-    this.onboardingService.getDailyVocabulary(requestedDay).subscribe({
+    this.onboardingService.getCommonSentences(requestedDay).subscribe({
       next: (res) => {
         this.dayNumber = res.data.dayNumber;
         this.currentDay = res.data.dayNumber;
         this.totalDays = res.data.totalDays;
         this.level = res.data.level;
-        this.words = res.data.words || [];
+        this.sentences = res.data.sentences || [];
         this.loading = false;
       },
       error: (error) => {
         this.loading = false;
         void this.notificationService.error(
-          getErrorMessage(error, 'Failed to load daily vocabulary.'),
+          getErrorMessage(error, 'Failed to load common sentences.'),
         );
       },
     });
