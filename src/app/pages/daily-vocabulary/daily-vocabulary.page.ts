@@ -65,11 +65,12 @@ export class DailyVocabularyPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Data load is handled in ionViewWillEnter so it refreshes whenever page opens.
+    // Data load is handled in ionViewWillEnter.
   }
 
   ionViewWillEnter(): void {
-    this.fetchDailyVocabulary();
+    this.currentDay = 1;
+    this.fetchDailyVocabulary(1);
   }
 
   back(): void {
@@ -94,12 +95,14 @@ export class DailyVocabularyPage implements OnInit {
     if (this.loading) {
       return;
     }
-    this.fetchDailyVocabulary();
+    this.currentDay = 1;
+    this.fetchDailyVocabulary(1);
   }
 
   private fetchDailyVocabulary(day?: number): void {
+    const requestedDay = day ?? 1;
     this.loading = true;
-    this.onboardingService.getDailyVocabulary(day).subscribe({
+    this.onboardingService.getDailyVocabulary(requestedDay).subscribe({
       next: (res) => {
         this.dayNumber = res.data.dayNumber;
         this.currentDay = res.data.dayNumber;
