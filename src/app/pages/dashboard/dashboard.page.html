@@ -10,7 +10,9 @@
       <ion-card-title>Main Menu</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-button expand="block" (click)="go('/onboarding')">Onboarding</ion-button>
+      @if (showOnboardingButton) {
+        <ion-button expand="block" (click)="go('/onboarding')">Onboarding</ion-button>
+      }
       <ion-button expand="block" (click)="go('/subscriptions')">Subscriptions</ion-button>
       <ion-button expand="block" (click)="go('/mentor')">AI Mentor Chat</ion-button>
       <ion-button expand="block" (click)="go('/conversation')">Conversation Session</ion-button>

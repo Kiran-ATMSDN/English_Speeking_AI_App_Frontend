@@ -48,6 +48,21 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  getCurrentUser(): User | null {
+    return this.userSubject.value;
+  }
+
+  updateCurrentUser(payload: Partial<User>): void {
+    const currentUser = this.userSubject.value;
+    if (!currentUser) {
+      return;
+    }
+
+    const updatedUser = { ...currentUser, ...payload };
+    localStorage.setItem(this.userKey, JSON.stringify(updatedUser));
+    this.userSubject.next(updatedUser);
+  }
+
   isAuthenticated(): boolean {
     return !!this.getToken();
   }

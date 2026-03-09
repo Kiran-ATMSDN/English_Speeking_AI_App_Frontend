@@ -15,10 +15,24 @@
           <ion-label>{{ question.questionText }}</ion-label>
         </ion-item>
         <ion-item>
-          <ion-label position="stacked">Answer</ion-label>
-          <ion-textarea rows="4" [(ngModel)]="answerText"></ion-textarea>
+          <ion-label position="stacked">Select Purpose</ion-label>
+          <select
+            style="width: 100%; margin-top: 8px; padding: 10px"
+            [(ngModel)]="answerText"
+          >
+            <option value="">Choose one purpose</option>
+            <option value="Basic Practice">Basic Practice</option>
+            <option value="Interview Preparation">Interview Preparation</option>
+            <option value="Improve Communication Skills">Improve Communication Skills</option>
+            <option value="Build Public Speaking Confidence">Build Public Speaking Confidence</option>
+          </select>
         </ion-item>
-        <ion-button expand="block" class="ion-margin-top" (click)="saveAnswer()" [disabled]="loading">
+        <ion-button
+          expand="block"
+          class="ion-margin-top"
+          (click)="saveAnswer()"
+          [disabled]="loading || !answerText.trim()"
+        >
           Save Answer
         </ion-button>
       } @else {

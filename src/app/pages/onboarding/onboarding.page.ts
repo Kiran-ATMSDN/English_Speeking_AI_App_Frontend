@@ -12,7 +12,6 @@ import {
   IonHeader,
   IonItem,
   IonLabel,
-  IonTextarea,
   IonText,
   IonTitle,
   IonToolbar,
@@ -21,6 +20,7 @@ import { OnboardingService } from '../../core/services/onboarding.service';
 import { OnboardingQuestion } from '../../core/models/api.models';
 import { getErrorMessage } from '../../core/utils/error.util';
 import { NotificationService } from '../../core/services/notification.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-onboarding',
@@ -39,7 +39,6 @@ import { NotificationService } from '../../core/services/notification.service';
     IonHeader,
     IonItem,
     IonLabel,
-    IonTextarea,
     IonText,
     IonTitle,
     IonToolbar,
@@ -54,6 +53,7 @@ export class OnboardingPage implements OnInit {
     private readonly onboardingService: OnboardingService,
     private readonly router: Router,
     private readonly notificationService: NotificationService,
+    private readonly authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -90,7 +90,12 @@ export class OnboardingPage implements OnInit {
       .subscribe({
         next: (res) => {
           void this.notificationService.success(res.message);
+          this.authService.updateCurrentUser({
+            onboardingCompleted: true,
+            learningPurpose: this.answerText.trim(),
+          });
           this.loading = false;
+          this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {
           void this.notificationService.error(getErrorMessage(err, 'Failed to save onboarding answer.'));
