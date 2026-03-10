@@ -1,30 +1,55 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Dashboard</ion-title>
+    <ion-title>English Coach</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Main Menu</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
+<ion-content class="dashboard-shell">
+  <div class="dashboard-page">
+    <section class="hero-panel">
+      <div class="hero-top">
+        <div class="avatar-chip">{{ userInitials }}</div>
+        <div class="hero-copy">
+          <span class="eyebrow">Welcome back</span>
+          <h1>{{ firstName }}</h1>
+          <p>Build speaking confidence with short, daily practice modules.</p>
+        </div>
+      </div>
+
       @if (showOnboardingButton) {
-        <ion-button expand="block" (click)="go('/onboarding')">Onboarding</ion-button>
+        <button type="button" class="onboarding-pill" (click)="go('/onboarding')">
+          Complete onboarding
+        </button>
       }
-      <ion-button expand="block" (click)="go('/subscriptions')">Subscriptions</ion-button>
-      <ion-button expand="block" (click)="go('/mentor')">AI Mentor Chat</ion-button>
-      <ion-button expand="block" (click)="go('/conversation')">Conversation Session</ion-button>
-      <ion-button expand="block" (click)="go('/speech')">Speech To Text</ion-button>
-      <ion-button expand="block" (click)="go('/daily-vocabulary')">Daily Vocabulary</ion-button>
-      <ion-button expand="block" (click)="go('/grammar-lessons')">Grammar Lessons</ion-button>
-      <ion-button expand="block" (click)="go('/common-sentences')">Common English Sentences</ion-button>
-      <ion-button expand="block" (click)="go('/conversation-scripts')">Conversation Scripts</ion-button>
-      <ion-button expand="block" (click)="go('/pronunciation-tips')">Pronunciation Tips</ion-button>
-      <ion-button expand="block" (click)="go('/english-learning-tips')">English Learning Tips</ion-button>
-      <ion-button expand="block" (click)="go('/profile')">Profile</ion-button>
-      <ion-button expand="block" fill="outline" color="danger" (click)="logout()">Logout</ion-button>
-    </ion-card-content>
-  </ion-card>
+    </section>
+
+    <section class="feature-grid">
+      <button
+        *ngFor="let item of quickLinks"
+        type="button"
+        class="feature-card"
+        [attr.data-accent]="item.accent"
+        (click)="go(item.route)"
+      >
+        <span class="card-kicker">Practice</span>
+        <strong>{{ item.title }}</strong>
+        <span>{{ item.subtitle }}</span>
+      </button>
+    </section>
+
+    <ion-button expand="block" fill="outline" color="danger" class="logout-button" (click)="logout()">
+      Logout
+    </ion-button>
+  </div>
 </ion-content>
+
+<div class="user-dock">
+  <button type="button" class="dock-item" (click)="go('/subscriptions')">
+    <span class="dock-icon">S</span>
+    <span>Subscriptions</span>
+  </button>
+  <button type="button" class="dock-item dock-item--primary" (click)="go('/profile')">
+    <span class="dock-icon">{{ userInitials }}</span>
+    <span>Profile</span>
+  </button>
+</div>

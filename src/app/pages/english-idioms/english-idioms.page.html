@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>English Idioms</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>English Idioms</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
+      <div class="controls">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">Previous Day</ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">Next Day</ion-button>
+      </div>
+      <div class="controls">
+        <ion-button size="small" (click)="speakAll()" [disabled]="loading || speakingAll || idioms.length === 0">Speak All</ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">Stop</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let item of idioms">
+      <ion-label>
+        <h2>{{ item.idiom }}</h2>
+        <p><strong>Meaning:</strong> {{ item.meaning }}</p>
+        <p><strong>Meaning (Hindi):</strong> {{ item.meaningHi }}</p>
+        <p><strong>Example:</strong> {{ item.example }}</p>
+      </ion-label>
+      <ion-button slot="end" fill="clear" size="small" (click)="speakIdiom(item)">Speak</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+</ion-content>

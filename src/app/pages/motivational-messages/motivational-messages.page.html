@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Motivational Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Motivational Messages</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
+      <div class="controls">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">Previous Day</ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">Next Day</ion-button>
+      </div>
+      <div class="controls">
+        <ion-button size="small" (click)="speakAll()" [disabled]="loading || speakingAll || messages.length === 0">Speak All</ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">Stop</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let item of messages">
+      <ion-label>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.message }}</p>
+        <p *ngIf="item.takeaway"><strong>Takeaway:</strong> {{ item.takeaway }}</p>
+      </ion-label>
+      <ion-button slot="end" fill="clear" size="small" (click)="speakMessage(item)">Speak</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+</ion-content>

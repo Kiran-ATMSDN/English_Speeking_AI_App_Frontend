@@ -3,10 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonTitle,
@@ -23,10 +19,6 @@ import { OnboardingService } from '../../core/services/onboarding.service';
   imports: [
     CommonModule,
     IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
     IonContent,
     IonHeader,
     IonTitle,
@@ -35,6 +27,22 @@ import { OnboardingService } from '../../core/services/onboarding.service';
 })
 export class DashboardPage {
   showOnboardingButton = true;
+  readonly user = this.authService.getCurrentUser();
+  readonly quickLinks = [
+    { title: 'AI Mentor', subtitle: 'Ask, learn, improve', route: '/mentor', accent: 'sunrise' },
+    { title: 'Conversation', subtitle: 'Practice live speaking', route: '/conversation', accent: 'lagoon' },
+    { title: 'Speech Lab', subtitle: 'Train with voice tools', route: '/speech', accent: 'ember' },
+    { title: 'Vocabulary', subtitle: 'Daily words and memory', route: '/daily-vocabulary', accent: 'mint' },
+    { title: 'Grammar', subtitle: 'Clear rules and examples', route: '/grammar-lessons', accent: 'sunrise' },
+    { title: 'Sentences', subtitle: 'Useful daily English', route: '/common-sentences', accent: 'lagoon' },
+    { title: 'Scripts', subtitle: 'Predefined dialogues', route: '/conversation-scripts', accent: 'ember' },
+    { title: 'Pronunciation', subtitle: 'Sound more natural', route: '/pronunciation-tips', accent: 'mint' },
+    { title: 'Learning Tips', subtitle: 'Smart practice habits', route: '/english-learning-tips', accent: 'sunrise' },
+    { title: 'Mini Quizzes', subtitle: 'Fast MCQ revision', route: '/mini-quizzes', accent: 'lagoon' },
+    { title: 'Idioms', subtitle: 'Speak more naturally', route: '/english-idioms', accent: 'ember' },
+    { title: 'Word of the Day', subtitle: 'One strong word daily', route: '/word-of-the-day', accent: 'mint' },
+    { title: 'Motivation', subtitle: 'Stay consistent daily', route: '/motivational-messages', accent: 'sunrise' },
+  ];
 
   constructor(
     private readonly router: Router,
@@ -70,5 +78,14 @@ export class DashboardPage {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth');
+  }
+
+  get firstName(): string {
+    return this.user?.fullName?.trim().split(/\s+/)[0] || 'Learner';
+  }
+
+  get userInitials(): string {
+    const parts = this.user?.fullName?.trim().split(/\s+/).filter(Boolean) || [];
+    return (parts.slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'U').slice(0, 2);
   }
 }

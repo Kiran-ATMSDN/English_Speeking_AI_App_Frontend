@@ -74,6 +74,30 @@ export const routes: Routes = [
       import('./pages/english-learning-tips/english-learning-tips.page').then((m) => m.EnglishLearningTipsPage),
   },
   {
+    path: 'mini-quizzes',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/mini-quizzes/mini-quizzes.page').then((m) => m.MiniQuizzesPage),
+  },
+  {
+    path: 'english-idioms',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/english-idioms/english-idioms.page').then((m) => m.EnglishIdiomsPage),
+  },
+  {
+    path: 'word-of-the-day',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/word-of-the-day/word-of-the-day.page').then((m) => m.WordOfTheDayPage),
+  },
+  {
+    path: 'motivational-messages',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/motivational-messages/motivational-messages.page').then((m) => m.MotivationalMessagesPage),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mini Quizzes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Mini Quizzes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
+      <div class="controls">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">Previous Day</ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">Next Day</ion-button>
+      </div>
+      <div class="controls">
+        <ion-button size="small" (click)="speakQuestion()" [disabled]="loading">Speak Question</ion-button>
+        <ion-button size="small" fill="outline" (click)="speakAll()" [disabled]="loading">Speak Full Quiz</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <h2>{{ quiz.question }}</h2>
+      <div class="option-list">
+        <button
+          *ngFor="let option of quiz.options; let i = index"
+          type="button"
+          class="option-button"
+          [class.selected]="selectedOptionIndex === i"
+          [class.correct]="submitted && i === quiz.correctAnswerIndex"
+          [class.wrong]="submitted && selectedOptionIndex === i && i !== quiz.correctAnswerIndex"
+          (click)="selectOption(i)"
+        >
+          {{ option }}
+        </button>
+      </div>
+      <div class="controls">
+        <ion-button size="small" (click)="submitAnswer()" [disabled]="submitted || selectedOptionIndex === null">Submit</ion-button>
+        <ion-button size="small" fill="outline" (click)="resetAnswer()" [disabled]="!submitted && selectedOptionIndex === null">Reset</ion-button>
+      </div>
+      <p *ngIf="submitted" [class.correct-text]="isCorrect" [class.wrong-text]="!isCorrect">
+        {{ isCorrect ? 'Correct answer.' : 'Incorrect answer.' }}
+      </p>
+      <p *ngIf="submitted"><strong>Explanation:</strong> {{ quiz.explanation }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+</ion-content>

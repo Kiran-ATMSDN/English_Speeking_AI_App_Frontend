@@ -7,6 +7,10 @@ import {
   ConversationScriptPayload,
   PronunciationTipsPayload,
   EnglishLearningTipsPayload,
+  MiniQuizPayload,
+  EnglishIdiomsPayload,
+  WordOfTheDayPayload,
+  MotivationalMessagesPayload,
   OnboardingAnswer,
   OnboardingQuestion,
 } from '../models/api.models';
@@ -59,5 +63,25 @@ export class OnboardingService {
   getEnglishLearningTips(day?: number) {
     const path = day ? `/onboarding/english-learning-tips?day=${day}` : '/onboarding/english-learning-tips';
     return this.api.get<EnglishLearningTipsPayload>(path);
+  }
+
+  getMiniQuiz(day?: number) {
+    const path = day ? `/onboarding/mini-quizzes?day=${day}` : '/onboarding/mini-quizzes';
+    return this.api.get<MiniQuizPayload>(path);
+  }
+
+  getEnglishIdioms(day?: number) {
+    const path = day ? `/onboarding/english-idioms?day=${day}` : '/onboarding/english-idioms';
+    return this.api.get<EnglishIdiomsPayload>(path);
+  }
+
+  getWordOfTheDay(day?: number) {
+    const path = day ? `/onboarding/word-of-the-day?day=${day}` : '/onboarding/word-of-the-day';
+    return this.api.get<WordOfTheDayPayload>(path);
+  }
+
+  getMotivationalMessages(day?: number) {
+    const path = day ? `/onboarding/motivational-messages?day=${day}` : '/onboarding/motivational-messages';
+    return this.api.get<MotivationalMessagesPayload>(path);
   }
 }

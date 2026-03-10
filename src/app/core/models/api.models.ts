@@ -137,6 +137,66 @@ export interface EnglishLearningTipsPayload {
   tips: EnglishLearningTip[];
 }
 
+export interface MiniQuiz {
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+}
+
+export interface MiniQuizPayload {
+  dayNumber: number;
+  totalDays: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  quiz: MiniQuiz;
+}
+
+export interface EnglishIdiom {
+  idiom: string;
+  meaning: string;
+  meaningHi: string;
+  example: string;
+}
+
+export interface EnglishIdiomsPayload {
+  dayNumber: number;
+  totalDays: number;
+  idiomsPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  idioms: EnglishIdiom[];
+}
+
+export interface WordOfTheDay {
+  word: string;
+  meaningEn: string;
+  meaningHi: string;
+  example: string;
+  tip?: string | null;
+}
+
+export interface WordOfTheDayPayload {
+  dayNumber: number;
+  totalDays: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  word: WordOfTheDay;
+}
+
+export interface MotivationalMessage {
+  title: string;
+  message: string;
+  takeaway?: string | null;
+}
+
+export interface MotivationalMessagesPayload {
+  dayNumber: number;
+  totalDays: number;
+  messagesPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  messages: MotivationalMessage[];
+}
+
 export interface SubscriptionPlan {
   id: number;
   name: string;
