@@ -16,23 +16,19 @@
       </div>
       <div class="module-controls">
         <ion-button size="small" (click)="speakAll()" [disabled]="loading || speakingAll || script.lines.length === 0">
-          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
           Play All
         </ion-button>
         <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">
-          <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
           Stop
         </ion-button>
       </div>
       <div class="module-nav">
         <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
-          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
           Prev
         </ion-button>
         <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
         <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
           Next
-          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-button>
       </div>
     </section>
@@ -51,7 +47,7 @@
           <p>{{ line.text }}</p>
         </div>
         <ion-button fill="outline" class="voice-button" (click)="speakLine(line)" aria-label="Speak conversation line">
-          <ion-icon name="volume-high-outline"></ion-icon>
+          <span class="voice-fallback" aria-hidden="true">🔊</span>
         </ion-button>
       </article>
     </section>

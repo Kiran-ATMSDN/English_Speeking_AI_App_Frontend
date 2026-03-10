@@ -1,4 +1,129 @@
+:host {
+  --auth-bg: linear-gradient(180deg, #f7eee3 0%, #fffaf5 50%, #eef5f3 100%);
+}
+
+ion-content.auth-shell {
+  --background: var(--auth-bg);
+}
+
+ion-toolbar {
+  --background: rgba(255, 248, 240, 0.92);
+  --color: #18322d;
+}
+
+.auth-page {
+  min-height: 100%;
+  padding: 22px 18px 28px;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+}
+
+.auth-hero {
+  padding: 12px 2px;
+}
+
+.auth-kicker {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #bb6f37;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.auth-hero h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.05;
+  color: #18322d;
+}
+
+.auth-hero p {
+  margin: 10px 0 0;
+  color: #61716b;
+  line-height: 1.6;
+}
+
+.auth-card {
+  margin: 0;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background:
+    radial-gradient(circle at top right, rgba(242, 165, 82, 0.22), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(246, 239, 229, 0.98));
+  box-shadow: 0 24px 46px rgba(63, 44, 30, 0.12);
+}
+
+.auth-card ion-card-content {
+  padding: 20px;
+}
+
+ion-segment {
+  background: rgba(24, 50, 45, 0.06);
+  border-radius: 18px;
+  padding: 6px;
+}
+
+ion-segment-button {
+  --border-radius: 14px;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.auth-field {
+  --background: rgba(247, 241, 233, 0.94);
+  --border-radius: 18px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  border: 1px solid rgba(24, 50, 45, 0.08);
+  border-radius: 18px;
+}
+
+.auth-field-slim {
+  max-width: 100px;
+}
+
+.reset-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.secondary-link {
+  margin-top: 16px;
+  border: 0;
+  background: transparent;
+  color: #264f83;
+  font-weight: 700;
+  padding: 0;
+}
+
 .message {
   display: block;
-  margin-top: 12px;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+@media (max-width: 420px) {
+  .auth-page {
+    padding: 16px 14px 22px;
+  }
+
+  .auth-hero h1 {
+    font-size: 30px;
+  }
+
+  .reset-row {
+    grid-template-columns: 1fr;
+  }
 }

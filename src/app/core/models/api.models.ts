@@ -26,9 +26,11 @@ export interface AuthPayload {
 }
 
 export interface OtpPayload {
-  mobileNumber: string;
+  mobileNumber?: string;
+  email?: string;
   expiresAt: string;
   otp?: string;
+  previewMessage?: string;
 }
 
 export interface OnboardingQuestion {

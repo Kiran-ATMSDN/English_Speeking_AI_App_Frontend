@@ -15,15 +15,17 @@ export class AuthService {
 
   signup(payload: {
     fullName: string;
-    email?: string | null;
+    email: string;
     mobileNumber: string;
+    password: string;
     countryCode?: string;
   }): Observable<{ success: boolean; message: string; data: AuthPayload }> {
     return this.api.post<AuthPayload>('/auth/signup', payload).pipe(tap((res) => this.setSession(res.data)));
   }
 
   login(payload: {
-    mobileNumber: string;
+    loginId: string;
+    password: string;
   }): Observable<{ success: boolean; message: string; data: AuthPayload }> {
     return this.api.post<AuthPayload>('/auth/login', payload).pipe(tap((res) => this.setSession(res.data)));
   }
@@ -42,6 +44,14 @@ export class AuthService {
     otp: string;
   }): Observable<{ success: boolean; message: string; data: AuthPayload }> {
     return this.api.post<AuthPayload>('/auth/verify-otp', payload).pipe(tap((res) => this.setSession(res.data)));
+  }
+
+  requestPasswordReset(payload: { email: string }) {
+    return this.api.post<OtpPayload>('/auth/request-password-reset', payload);
+  }
+
+  resetPassword(payload: { email: string; otp: string; password: string }) {
+    return this.api.post<{ email: string }>('/auth/reset-password', payload);
   }
 
   getToken(): string | null {

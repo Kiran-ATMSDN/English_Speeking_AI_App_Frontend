@@ -6,16 +6,14 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
-  IonLabel,
+  IonText,
   IonSegment,
   IonSegmentButton,
-  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -23,7 +21,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { getErrorMessage } from '../../core/utils/error.util';
 import { NotificationService } from '../../core/services/notification.service';
 
-type AuthMode = 'login' | 'signup' | 'otp';
+type AuthMode = 'login' | 'signup';
 
 @Component({
   selector: 'app-auth',
@@ -36,13 +34,11 @@ type AuthMode = 'login' | 'signup' | 'otp';
     IonButton,
     IonCard,
     IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
     IonContent,
     IonHeader,
+    IonIcon,
     IonInput,
     IonItem,
-    IonLabel,
     IonSegment,
     IonSegmentButton,
     IonText,
@@ -53,13 +49,20 @@ type AuthMode = 'login' | 'signup' | 'otp';
 export class AuthPage {
   mode: AuthMode = 'login';
   loading = false;
+  forgotPasswordMode = false;
 
   fullName = '';
   email = '';
+  loginId = '';
   mobileNumber = '';
   countryCode = '+91';
+  password = '';
+  confirmPassword = '';
   otp = '';
   lastOtpPreview = '';
+  resetEmail = '';
+  resetPasswordValue = '';
+  resetConfirmPassword = '';
 
   constructor(
     private readonly authService: AuthService,
@@ -69,13 +72,20 @@ export class AuthPage {
 
   onModeChange(value: string | number | undefined): void {
     this.mode = (value as AuthMode) || 'login';
+    this.forgotPasswordMode = false;
+    this.lastOtpPreview = '';
   }
 
   submit(): void {
+    if (this.mode === 'signup' && this.password !== this.confirmPassword) {
+      void this.notificationService.error('Passwords do not match.');
+      return;
+    }
+
     this.loading = true;
 
     if (this.mode === 'login') {
-      this.authService.login({ mobileNumber: this.mobileNumber.trim() }).subscribe({
+      this.authService.login({ loginId: this.loginId.trim(), password: this.password }).subscribe({
         next: (res) => {
           void this.notificationService.success(res.message);
           this.loading = false;
@@ -93,8 +103,9 @@ export class AuthPage {
       this.authService
         .signup({
           fullName: this.fullName.trim(),
-          email: this.email.trim() || null,
+          email: this.email.trim(),
           mobileNumber: this.mobileNumber.trim(),
+          password: this.password,
           countryCode: this.countryCode.trim() || '+91',
         })
         .subscribe({
@@ -111,41 +122,63 @@ export class AuthPage {
       return;
     }
 
-    this.authService.verifyOtp({ mobileNumber: this.mobileNumber.trim(), otp: this.otp.trim() }).subscribe({
+    this.loading = false;
+  }
+
+  sendResetOtp(): void {
+    this.loading = true;
+    this.authService.requestPasswordReset({ email: this.resetEmail.trim() }).subscribe({
       next: (res) => {
-        void this.notificationService.success(res.message);
+        this.lastOtpPreview = res.data.otp || '';
+        void this.notificationService.info(
+          `${res.message} Expires: ${new Date(res.data.expiresAt).toLocaleString()}`,
+        );
+        if (res.data.previewMessage) {
+          void this.notificationService.info(res.data.previewMessage);
+        }
         this.loading = false;
-        this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
-        void this.notificationService.error(getErrorMessage(err, 'OTP verification failed.'));
+        void this.notificationService.error(getErrorMessage(err, 'Failed to send reset OTP.'));
         this.loading = false;
       },
     });
   }
 
-  sendOtp(): void {
-    this.loading = true;
+  resetPassword(): void {
+    if (this.resetPasswordValue !== this.resetConfirmPassword) {
+      void this.notificationService.error('Passwords do not match.');
+      return;
+    }
 
+    this.loading = true;
     this.authService
-      .sendOtp({
-        mobileNumber: this.mobileNumber.trim(),
-        countryCode: this.countryCode.trim() || '+91',
-        fullName: this.fullName.trim() || 'User',
-        email: this.email.trim() || null,
+      .resetPassword({
+        email: this.resetEmail.trim(),
+        otp: this.otp.trim(),
+        password: this.resetPasswordValue,
       })
       .subscribe({
         next: (res) => {
-          this.lastOtpPreview = res.data.otp || '';
-          void this.notificationService.info(
-            `${res.message} Expires: ${new Date(res.data.expiresAt).toLocaleString()}`,
-          );
+          void this.notificationService.success(res.message);
           this.loading = false;
+          this.forgotPasswordMode = false;
+          this.mode = 'login';
+          this.password = '';
+          this.otp = '';
+          this.resetPasswordValue = '';
+          this.resetConfirmPassword = '';
         },
         error: (err) => {
-          void this.notificationService.error(getErrorMessage(err, 'Failed to send OTP.'));
+          void this.notificationService.error(getErrorMessage(err, 'Failed to reset password.'));
           this.loading = false;
         },
       });
   }
+
+  toggleForgotPassword(): void {
+    this.forgotPasswordMode = !this.forgotPasswordMode;
+    this.lastOtpPreview = '';
+  }
+
 }

@@ -7,7 +7,6 @@ import {
   IonCardContent,
   IonContent,
   IonHeader,
-  IonIcon,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -30,7 +29,6 @@ type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
     IonCardContent,
     IonContent,
     IonHeader,
-    IonIcon,
     IonTitle,
     IonToolbar,
   ],

@@ -1,65 +1,117 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>English Speaking AI</ion-title>
+    <ion-title>English Coach</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Auth</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-segment [value]="mode" (ionChange)="onModeChange($event.detail.value)">
-        <ion-segment-button value="login">
-          <ion-label>Login</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="signup">
-          <ion-label>Signup</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="otp">
-          <ion-label>OTP</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+<ion-content class="auth-shell">
+  <div class="auth-page">
+    <section class="auth-hero">
+      <span class="auth-kicker">Speak Better Daily</span>
+      <h1>{{ forgotPasswordMode ? 'Reset Password' : 'Welcome Back' }}</h1>
+      <p>
+        @if (forgotPasswordMode) {
+          Use your email OTP to create a new password and return to your account.
+        } @else {
+          Login or create your account with secure email and password access.
+        }
+      </p>
+    </section>
 
-      <ion-item>
-        <ion-label position="stacked">Country Code</ion-label>
-        <ion-input [(ngModel)]="countryCode" placeholder="+91"></ion-input>
-      </ion-item>
+    <ion-card class="auth-card">
+      <ion-card-content>
+        @if (!forgotPasswordMode) {
+          <ion-segment [value]="mode" (ionChange)="onModeChange($event.detail.value)">
+            <ion-segment-button value="login">
+              Login
+            </ion-segment-button>
+            <ion-segment-button value="signup">
+              Sign Up
+            </ion-segment-button>
+          </ion-segment>
 
-      <ion-item>
-        <ion-label position="stacked">Mobile Number</ion-label>
-        <ion-input [(ngModel)]="mobileNumber" placeholder="9876543210"></ion-input>
-      </ion-item>
+          <div class="auth-form">
+            @if (mode === 'signup') {
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="fullName" placeholder="Full name"></ion-input>
+              </ion-item>
 
-      @if (mode === 'signup' || mode === 'otp') {
-        <ion-item>
-          <ion-label position="stacked">Full Name (for signup / otp send)</ion-label>
-          <ion-input [(ngModel)]="fullName" placeholder="Your name"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">Email (optional)</ion-label>
-          <ion-input [(ngModel)]="email" type="email" placeholder="you@mail.com"></ion-input>
-        </ion-item>
-      }
+              <ion-item lines="none" class="auth-field auth-field-slim">
+                <ion-input [(ngModel)]="countryCode" placeholder="+91"></ion-input>
+              </ion-item>
 
-      @if (mode === 'otp') {
-        <ion-item>
-          <ion-label position="stacked">OTP</ion-label>
-          <ion-input [(ngModel)]="otp" placeholder="6 digit code"></ion-input>
-        </ion-item>
-        <ion-button expand="block" class="ion-margin-top" (click)="sendOtp()" [disabled]="loading">
-          Send OTP
-        </ion-button>
-      }
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="mobileNumber" placeholder="Mobile number"></ion-input>
+              </ion-item>
+            }
 
-      <ion-button expand="block" class="ion-margin-top" (click)="submit()" [disabled]="loading">
-        {{ loading ? 'Please wait...' : 'Submit' }}
-      </ion-button>
+            @if (mode === 'login') {
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="loginId" placeholder="Email or mobile number"></ion-input>
+              </ion-item>
+            } @else {
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="email" type="email" placeholder="Email address"></ion-input>
+              </ion-item>
+            }
 
-      @if (lastOtpPreview) {
-        <ion-text color="medium" class="message">Dev OTP Preview: {{ lastOtpPreview }}</ion-text>
-      }
-    </ion-card-content>
-  </ion-card>
+            <ion-item lines="none" class="auth-field">
+              <ion-input [(ngModel)]="password" type="password" placeholder="Password"></ion-input>
+            </ion-item>
+
+            @if (mode === 'signup') {
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="confirmPassword" type="password" placeholder="Confirm password"></ion-input>
+              </ion-item>
+            }
+
+            <ion-button expand="block" (click)="submit()" [disabled]="loading">
+              <ion-icon [name]="mode === 'login' ? 'log-in-outline' : 'person-add-outline'" slot="start"></ion-icon>
+              {{ loading ? 'Please wait...' : (mode === 'login' ? 'Login' : 'Create Account') }}
+            </ion-button>
+          </div>
+
+          <button type="button" class="secondary-link" (click)="toggleForgotPassword()">
+            Reset Password
+          </button>
+        } @else {
+          <div class="auth-form">
+            <ion-item lines="none" class="auth-field">
+              <ion-input [(ngModel)]="resetEmail" type="email" placeholder="Enter your email id"></ion-input>
+            </ion-item>
+
+            <div class="reset-row">
+              <ion-item lines="none" class="auth-field">
+                <ion-input [(ngModel)]="otp" placeholder="6 digit OTP"></ion-input>
+              </ion-item>
+              <ion-button fill="outline" (click)="sendResetOtp()" [disabled]="loading || !resetEmail.trim()">
+                Send OTP
+              </ion-button>
+            </div>
+
+            <ion-item lines="none" class="auth-field">
+              <ion-input [(ngModel)]="resetPasswordValue" type="password" placeholder="New password"></ion-input>
+            </ion-item>
+
+            <ion-item lines="none" class="auth-field">
+              <ion-input [(ngModel)]="resetConfirmPassword" type="password" placeholder="Confirm new password"></ion-input>
+            </ion-item>
+
+            <ion-button expand="block" (click)="resetPassword()" [disabled]="loading">
+              <ion-icon name="key-outline" slot="start"></ion-icon>
+              {{ loading ? 'Please wait...' : 'Reset Password' }}
+            </ion-button>
+          </div>
+
+          <button type="button" class="secondary-link" (click)="toggleForgotPassword()">
+            Back to Login
+          </button>
+        }
+
+        @if (lastOtpPreview) {
+          <ion-text color="medium" class="message">OTP Preview: {{ lastOtpPreview }}</ion-text>
+        }
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
