@@ -29,9 +29,6 @@ export class DashboardPage {
   showOnboardingButton = true;
   readonly user = this.authService.getCurrentUser();
   readonly quickLinks = [
-    { title: 'AI Mentor', subtitle: 'Ask, learn, improve', route: '/mentor', accent: 'sunrise' },
-    { title: 'Conversation', subtitle: 'Practice live speaking', route: '/conversation', accent: 'lagoon' },
-    { title: 'Speech Lab', subtitle: 'Train with voice tools', route: '/speech', accent: 'ember' },
     { title: 'Vocabulary', subtitle: 'Daily words and memory', route: '/daily-vocabulary', accent: 'mint' },
     { title: 'Grammar', subtitle: 'Clear rules and examples', route: '/grammar-lessons', accent: 'sunrise' },
     { title: 'Sentences', subtitle: 'Useful daily English', route: '/common-sentences', accent: 'lagoon' },
@@ -42,6 +39,9 @@ export class DashboardPage {
     { title: 'Idioms', subtitle: 'Speak more naturally', route: '/english-idioms', accent: 'ember' },
     { title: 'Word of the Day', subtitle: 'One strong word daily', route: '/word-of-the-day', accent: 'mint' },
     { title: 'Motivation', subtitle: 'Stay consistent daily', route: '/motivational-messages', accent: 'sunrise' },
+    { title: 'AI Mentor', subtitle: 'Ask, learn, improve', route: '/mentor', accent: 'sunrise' },
+    { title: 'Conversation', subtitle: 'Practice live speaking', route: '/conversation', accent: 'lagoon' },
+    { title: 'Speech Lab', subtitle: 'Train with voice tools', route: '/speech', accent: 'ember' },
   ];
 
   constructor(

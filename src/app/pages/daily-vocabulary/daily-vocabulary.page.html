@@ -4,53 +4,55 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>100 Days Vocabulary Challenge</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
-      <br />
-      <ion-note>Showing {{ words.length }} words for {{ todayLabel }}</ion-note>
-      <div class="day-controls">
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Vocabulary Sprint</span>
+      <h1>100 Days Vocabulary Challenge</h1>
+      <p class="module-subtitle">Fresh words with Hindi meaning, daily usage, and quick listening practice.</p>
+      <div class="module-meta">
+        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+        <span class="module-badge">{{ level }}</span>
+        <span class="module-badge">{{ words.length }} words</span>
+        <span class="module-badge">{{ todayLabel }}</span>
+      </div>
+      <div class="module-controls">
         <ion-button size="small" (click)="speakAllDetails()" [disabled]="loading || speakingAll || words.length === 0">
-          Speak All
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          Play All
         </ion-button>
         <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">
+          <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
           Stop
         </ion-button>
       </div>
-      <div class="day-controls">
+      <div class="module-nav">
         <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
-          Previous Day
+          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+          Prev
         </ion-button>
-        <ion-button size="small" fill="outline" (click)="goToToday()" [disabled]="loading">
-          Today
-        </ion-button>
-        <ion-button
-          size="small"
-          fill="outline"
-          (click)="nextDay()"
-          [disabled]="loading || currentDay >= totalDays"
-        >
-          Next Day
+        <ion-button size="small" fill="outline" (click)="goToToday()" [disabled]="loading">Today</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-button>
       </div>
-    </ion-card-content>
-  </ion-card>
+    </section>
 
-  <ion-list>
-    <ion-item *ngFor="let item of words">
-      <ion-label>
-        <h2>Word: {{ item.word }}</h2>
-        <p><strong>Meaning (English):</strong> {{ item.meaningEn }}</p>
-        <p><strong>Meaning (Hindi):</strong> {{ item.meaningHi }}</p>
-        <p><strong>Example:</strong> {{ item.example }}</p>
-      </ion-label>
-      <ion-button slot="end" fill="clear" size="small" (click)="speakWord(item)">Speak</ion-button>
-    </ion-item>
-  </ion-list>
+    <section class="module-list">
+      <article class="module-list-item" *ngFor="let item of words">
+        <div class="module-list-copy">
+          <h3>{{ item.word }}</h3>
+          <p><strong>Meaning (English):</strong> {{ item.meaningEn }}</p>
+          <p><strong>Meaning (Hindi):</strong> {{ item.meaningHi }}</p>
+          <p><strong>Example:</strong> {{ item.example }}</p>
+        </div>
+        <ion-button fill="outline" class="voice-button" (click)="speakWord(item)" aria-label="Speak word details">
+          <ion-icon name="volume-high-outline"></ion-icon>
+        </ion-button>
+      </article>
+    </section>
 
-  <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

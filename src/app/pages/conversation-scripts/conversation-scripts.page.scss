@@ -1,15 +1,16 @@
-.controls {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+.script-line {
+  align-items: center;
 }
 
-h2 {
-  margin: 0 0 4px;
-  font-size: 15px;
-}
-
-p {
-  margin: 2px 0;
+.line-speaker {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(38, 79, 131, 0.1);
+  color: var(--app-navy);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
 }

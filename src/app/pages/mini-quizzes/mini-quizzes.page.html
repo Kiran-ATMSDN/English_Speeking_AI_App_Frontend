@@ -4,28 +4,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Mini Quizzes</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
-      <div class="controls">
-        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">Previous Day</ion-button>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Quick Check</span>
+      <h1>Mini Quizzes</h1>
+      <p class="module-subtitle">Fast multiple-choice practice with audio support and instant explanation.</p>
+      <div class="module-meta">
+        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+        <span class="module-badge">{{ level }}</span>
+      </div>
+      <div class="module-controls">
+        <ion-button size="small" (click)="speakQuestion()" [disabled]="loading">
+          <ion-icon name="volume-high-outline" slot="start"></ion-icon>
+          Question
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="speakAll()" [disabled]="loading">
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          Full Quiz
+        </ion-button>
+      </div>
+      <div class="module-nav">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+          Prev
+        </ion-button>
         <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
-        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">Next Day</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
       </div>
-      <div class="controls">
-        <ion-button size="small" (click)="speakQuestion()" [disabled]="loading">Speak Question</ion-button>
-        <ion-button size="small" fill="outline" (click)="speakAll()" [disabled]="loading">Speak Full Quiz</ion-button>
-      </div>
-    </ion-card-content>
-  </ion-card>
+    </section>
 
-  <ion-card>
-    <ion-card-content>
-      <h2>{{ quiz.question }}</h2>
+    <ion-card class="module-card">
+      <ion-card-content>
+        <h2>{{ quiz.question }}</h2>
       <div class="option-list">
         <button
           *ngFor="let option of quiz.options; let i = index"
@@ -47,8 +61,9 @@
         {{ isCorrect ? 'Correct answer.' : 'Incorrect answer.' }}
       </p>
       <p *ngIf="submitted"><strong>Explanation:</strong> {{ quiz.explanation }}</p>
-    </ion-card-content>
-  </ion-card>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

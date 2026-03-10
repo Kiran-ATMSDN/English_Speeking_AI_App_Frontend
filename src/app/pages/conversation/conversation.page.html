@@ -4,49 +4,68 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Session</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-button expand="block" (click)="startSession()" [disabled]="loading">Start New Session</ion-button>
-      <ion-button expand="block" fill="outline" (click)="loadHistory()" [disabled]="!sessionId || loading">
-        Load History
-      </ion-button>
-      <ion-text>Session ID: {{ sessionId || '-' }}</ion-text>
-    </ion-card-content>
-  </ion-card>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Live Practice</span>
+      <h1>Conversation Session</h1>
+      <p class="module-subtitle">Start a session, send text or audio, and continue the chat with saved history.</p>
+      <div class="module-meta">
+        <span class="module-badge">Session {{ sessionId || 'Not started' }}</span>
+        <span class="module-badge">{{ history.length }} messages</span>
+      </div>
+      <div class="module-controls">
+        <ion-button (click)="startSession()" [disabled]="loading">
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          Start Session
+        </ion-button>
+        <ion-button fill="outline" (click)="loadHistory()" [disabled]="!sessionId || loading">
+          <ion-icon name="time-outline" slot="start"></ion-icon>
+          History
+        </ion-button>
+      </div>
+    </section>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Send Message</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label position="stacked">Message</ion-label>
-        <ion-textarea rows="3" [(ngModel)]="inputMessage"></ion-textarea>
-      </ion-item>
-      <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
-      @if (transcribedText) {
-        <p><strong>Transcribed:</strong> {{ transcribedText }}</p>
-      }
-      <ion-button expand="block" class="ion-margin-top" (click)="sendMessage()" [disabled]="loading">
-        Send
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+    <ion-card class="module-card">
+      <ion-card-content>
+        <div class="conversation-form">
+          <label class="field-label" for="conversation-message">Message</label>
+          <ion-item lines="none" class="conversation-textarea">
+            <ion-textarea
+              id="conversation-message"
+              rows="4"
+              [(ngModel)]="inputMessage"
+              placeholder="Type your message or upload audio..."
+            ></ion-textarea>
+          </ion-item>
 
-  <ion-list>
-    @for (item of history; track $index) {
-      <ion-item>
-        <ion-label>
-          <h3>{{ item.role }}</h3>
+          <label class="upload-chip">
+            <ion-icon name="mic-outline"></ion-icon>
+            <span>Upload Audio</span>
+            <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
+          </label>
+
+          @if (transcribedText) {
+            <p><strong>Transcribed:</strong> {{ transcribedText }}</p>
+          }
+
+          <ion-button expand="block" (click)="sendMessage()" [disabled]="loading || !inputMessage.trim()">
+            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+            Send Message
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <section class="chat-stream">
+      @for (item of history; track $index) {
+        <article class="chat-bubble" [class.chat-bubble--assistant]="item.role === 'assistant'">
+          <span class="chat-role">{{ item.role === 'assistant' ? 'Coach' : 'You' }}</span>
           <p>{{ item.message }}</p>
-        </ion-label>
-      </ion-item>
-    }
-  </ion-list>
+        </article>
+      }
+    </section>
 
-  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

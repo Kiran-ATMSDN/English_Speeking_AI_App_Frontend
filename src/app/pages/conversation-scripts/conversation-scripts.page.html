@@ -4,52 +4,58 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Conversation Scripts</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
-      <div class="controls">
-        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
-          Previous Day
-        </ion-button>
-        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">
-          Day 1
-        </ion-button>
-        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
-          Next Day
-        </ion-button>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Dialogue Practice</span>
+      <h1>Conversation Scripts</h1>
+      <p class="module-subtitle">Follow real conversation flow, replay each line, and practice speaker-by-speaker.</p>
+      <div class="module-meta">
+        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+        <span class="module-badge">{{ level }}</span>
       </div>
-      <div class="controls">
+      <div class="module-controls">
         <ion-button size="small" (click)="speakAll()" [disabled]="loading || speakingAll || script.lines.length === 0">
-          Speak All
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          Play All
         </ion-button>
         <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">
+          <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
           Stop
         </ion-button>
       </div>
-    </ion-card-content>
-  </ion-card>
+      <div class="module-nav">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+          Prev
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </section>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{ script.title }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Context:</strong> {{ script.context }}</p>
-      <ion-list>
-        <ion-item *ngFor="let line of script.lines">
-          <ion-label>
-            <h2>{{ line.speaker }}</h2>
-            <p>{{ line.text }}</p>
-          </ion-label>
-          <ion-button slot="end" fill="clear" size="small" (click)="speakLine(line)">Speak</ion-button>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+    <ion-card class="module-card">
+      <ion-card-content>
+        <h2>{{ script.title }}</h2>
+        <p><strong>Context:</strong> {{ script.context }}</p>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+    <section class="module-list">
+      <article class="module-list-item script-line" *ngFor="let line of script.lines">
+        <div class="module-list-copy">
+          <span class="line-speaker">{{ line.speaker }}</span>
+          <p>{{ line.text }}</p>
+        </div>
+        <ion-button fill="outline" class="voice-button" (click)="speakLine(line)" aria-label="Speak conversation line">
+          <ion-icon name="volume-high-outline"></ion-icon>
+        </ion-button>
+      </article>
+    </section>
+
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

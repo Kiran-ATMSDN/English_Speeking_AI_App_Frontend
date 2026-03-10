@@ -4,45 +4,52 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>English Learning Tips</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
-      <div class="controls">
-        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
-          Previous Day
-        </ion-button>
-        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">
-          Day 1
-        </ion-button>
-        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
-          Next Day
-        </ion-button>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Learning Habits</span>
+      <h1>English Learning Tips</h1>
+      <p class="module-subtitle">Actionable habits and practice moves that keep learners progressing daily.</p>
+      <div class="module-meta">
+        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+        <span class="module-badge">{{ level }}</span>
       </div>
-      <div class="controls">
+      <div class="module-controls">
         <ion-button size="small" (click)="speakAll()" [disabled]="loading || speakingAll || tips.length === 0">
-          Speak All
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          Play All
         </ion-button>
         <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingAll">
+          <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
           Stop
         </ion-button>
       </div>
-    </ion-card-content>
-  </ion-card>
+      <div class="module-nav">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+          Prev
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </section>
 
-  <ion-list>
-    <ion-item *ngFor="let tip of tips">
-      <ion-label>
-        <h2>{{ tip.title }}</h2>
-        <p><strong>Description:</strong> {{ tip.description }}</p>
-        <p *ngIf="tip.actionStep"><strong>Action Step:</strong> {{ tip.actionStep }}</p>
-      </ion-label>
-      <ion-button slot="end" fill="clear" size="small" (click)="speakTip(tip)">Speak</ion-button>
-    </ion-item>
-  </ion-list>
+    <section class="module-list">
+      <article class="module-list-item" *ngFor="let tip of tips">
+        <div class="module-list-copy">
+          <h3>{{ tip.title }}</h3>
+          <p><strong>Description:</strong> {{ tip.description }}</p>
+          <p *ngIf="tip.actionStep"><strong>Action Step:</strong> {{ tip.actionStep }}</p>
+        </div>
+        <ion-button fill="outline" class="voice-button" (click)="speakTip(tip)" aria-label="Speak learning tip">
+          <ion-icon name="volume-high-outline"></ion-icon>
+        </ion-button>
+      </article>
+    </section>
 
-  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

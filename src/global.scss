@@ -35,3 +35,203 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+:root {
+  --app-sand: #f8efe4;
+  --app-paper: rgba(255, 252, 247, 0.95);
+  --app-ink: #18322d;
+  --app-muted: #61716b;
+  --app-border: rgba(24, 50, 45, 0.08);
+  --app-gold: #f2a552;
+  --app-teal: #2a8d7b;
+  --app-navy: #264f83;
+}
+
+ion-content.module-shell {
+  --background: linear-gradient(180deg, #f8efe4 0%, #fffaf4 48%, #f1f6f5 100%);
+}
+
+.module-page {
+  padding: 18px 16px 28px;
+}
+
+.module-hero {
+  border-radius: 28px;
+  padding: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(242, 165, 82, 0.28), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(246, 239, 229, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow: 0 22px 44px rgba(63, 44, 30, 0.1);
+}
+
+.module-kicker {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #bb6f37;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.module-hero h1,
+.module-card h2,
+.module-card h3 {
+  margin: 0;
+  color: var(--app-ink);
+}
+
+.module-subtitle {
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.module-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.module-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(24, 50, 45, 0.07);
+  color: var(--app-ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.module-controls,
+.module-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.module-controls ion-button,
+.module-nav ion-button,
+.back-button {
+  --border-radius: 16px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --box-shadow: none;
+  min-height: 42px;
+}
+
+.module-card {
+  margin-top: 16px;
+  border-radius: 24px;
+  background: var(--app-paper);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 16px 34px rgba(34, 46, 43, 0.08);
+  overflow: hidden;
+}
+
+.module-card ion-card-content,
+.module-card .card-content {
+  padding: 18px;
+}
+
+.module-card p {
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  line-height: 1.55;
+}
+
+.module-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.module-list-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-radius: 22px;
+  padding: 16px;
+  background: var(--app-paper);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 14px 28px rgba(34, 46, 43, 0.07);
+}
+
+.module-list-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.module-list-copy h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--app-ink);
+}
+
+.module-list-copy p {
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  line-height: 1.5;
+}
+
+.voice-button {
+  --border-radius: 16px;
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  margin: 0;
+  --background: rgba(42, 141, 123, 0.12);
+  --color: var(--app-teal);
+  --box-shadow: none;
+  position: relative;
+}
+
+.voice-button[fill='outline'] {
+  --border-color: rgba(42, 141, 123, 0.28);
+}
+
+.voice-button ion-icon {
+  font-size: 20px;
+  color: var(--app-teal);
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.voice-button::after {
+  content: "\1F50A";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--app-teal);
+  pointer-events: none;
+}
+
+.back-button {
+  margin-top: 18px;
+  --background: rgba(255, 252, 247, 0.86);
+  --color: var(--app-ink);
+  --border-color: rgba(24, 50, 45, 0.15);
+}
+
+@media (max-width: 420px) {
+  .module-page {
+    padding: 14px 12px 24px;
+  }
+
+  .module-list-item {
+    padding: 14px;
+  }
+}

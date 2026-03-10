@@ -4,31 +4,46 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Word of the Day</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-note>Day {{ dayNumber }} / {{ totalDays }} | Level: {{ level }}</ion-note>
-      <div class="controls">
-        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">Previous Day</ion-button>
-        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
-        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">Next Day</ion-button>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Daily Word</span>
+      <h1>Word of the Day</h1>
+      <p class="module-subtitle">One focused word with Hindi support, example usage, and a quick audio replay.</p>
+      <div class="module-meta">
+        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+        <span class="module-badge">{{ level }}</span>
       </div>
-    </ion-card-content>
-  </ion-card>
+      <div class="module-nav">
+        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+          Prev
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+          Next
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </section>
 
-  <ion-card>
-    <ion-card-content>
-      <h2>{{ word.word }}</h2>
-      <p><strong>Meaning (English):</strong> {{ word.meaningEn }}</p>
-      <p><strong>Meaning (Hindi):</strong> {{ word.meaningHi }}</p>
-      <p><strong>Example:</strong> {{ word.example }}</p>
-      <p *ngIf="word.tip"><strong>Tip:</strong> {{ word.tip }}</p>
-      <ion-button size="small" (click)="speakWord()">Speak</ion-button>
-    </ion-card-content>
-  </ion-card>
+    <ion-card class="module-card">
+      <ion-card-content>
+        <div class="module-list-item">
+          <div class="module-list-copy">
+            <h2>{{ word.word }}</h2>
+            <p><strong>Meaning (English):</strong> {{ word.meaningEn }}</p>
+            <p><strong>Meaning (Hindi):</strong> {{ word.meaningHi }}</p>
+            <p><strong>Example:</strong> {{ word.example }}</p>
+            <p *ngIf="word.tip"><strong>Tip:</strong> {{ word.tip }}</p>
+          </div>
+          <ion-button fill="outline" class="voice-button" (click)="speakWord()" aria-label="Speak word of the day">
+            <ion-icon name="volume-high-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-button expand="block" fill="outline" (click)="back()">Back</ion-button>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

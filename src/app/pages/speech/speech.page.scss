@@ -1,4 +1,50 @@
-.message {
-  display: block;
-  margin-top: 10px;
+.speech-form {
+  display: grid;
+  gap: 14px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--app-ink);
+}
+
+.upload-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(38, 79, 131, 0.08);
+  color: var(--app-navy);
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-chip--wide {
+  width: 100%;
+  justify-content: center;
+}
+
+.upload-chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.conversation-textarea {
+  --background: rgba(247, 241, 233, 0.9);
+  --border-radius: 18px;
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+  border: 1px solid rgba(24, 50, 45, 0.08);
+  border-radius: 18px;
+}
+
+.conversation-textarea ion-textarea {
+  --padding-top: 12px;
+  --padding-bottom: 12px;
 }

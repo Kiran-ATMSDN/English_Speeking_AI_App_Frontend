@@ -4,41 +4,60 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Send Sentence</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label position="stacked">Your Sentence</ion-label>
-        <ion-textarea rows="4" [(ngModel)]="inputMessage"></ion-textarea>
-      </ion-item>
-      <ion-button expand="block" class="ion-margin-top" (click)="send()" [disabled]="loading">
-        Get Correction
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Coach Feedback</span>
+      <h1>AI Mentor</h1>
+      <p class="module-subtitle">Paste your sentence, get an improved version, and listen to the mentor's next prompt.</p>
+    </section>
 
-  @if (mentorResponse) {
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Mentor Response</ion-card-title>
-      </ion-card-header>
+    <ion-card class="module-card">
       <ion-card-content>
-        <p><strong>Correction:</strong> {{ mentorResponse.correction }}</p>
-        <p><strong>Explanation:</strong> {{ mentorResponse.explanation }}</p>
-        <p><strong>Next Question:</strong> {{ mentorResponse.nextQuestion }}</p>
-        <ion-button expand="block" fill="outline" (click)="speak(mentorResponse.nextQuestion)">
-          Listen To Next Question
-        </ion-button>
+        <div class="mentor-form">
+          <label class="field-label" for="mentor-message">Your Sentence</label>
+          <ion-item lines="none" class="mentor-textarea">
+            <ion-textarea
+              id="mentor-message"
+              rows="5"
+              [(ngModel)]="inputMessage"
+              placeholder="Write the sentence you want corrected..."
+            ></ion-textarea>
+          </ion-item>
+          <ion-button expand="block" (click)="send()" [disabled]="loading || !inputMessage.trim()">
+            <ion-icon name="sparkles-outline" slot="start"></ion-icon>
+            Get Correction
+          </ion-button>
+        </div>
       </ion-card-content>
     </ion-card>
-  }
 
-  @if (audioUrl) {
-    <audio [src]="audioUrl" controls></audio>
-  }
+    @if (mentorResponse) {
+      <ion-card class="module-card">
+        <ion-card-content>
+          <h2>Mentor Response</h2>
+          <p><strong>Correction:</strong> {{ mentorResponse.correction }}</p>
+          <p><strong>Explanation:</strong> {{ mentorResponse.explanation }}</p>
+          <p><strong>Next Question:</strong> {{ mentorResponse.nextQuestion }}</p>
+          <div class="module-controls">
+            <ion-button fill="outline" (click)="speak(mentorResponse.nextQuestion)">
+              <ion-icon name="volume-high-outline" slot="start"></ion-icon>
+              Listen
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
 
-  <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
+    @if (audioUrl) {
+      <ion-card class="module-card">
+        <ion-card-content>
+          <h2>Audio Playback</h2>
+          <audio [src]="audioUrl" controls></audio>
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>

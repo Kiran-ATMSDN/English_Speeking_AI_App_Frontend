@@ -4,24 +4,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Upload Audio</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
+<ion-content class="module-shell">
+  <div class="module-page">
+    <section class="module-hero">
+      <span class="module-kicker">Voice Capture</span>
+      <h1>Speech Lab</h1>
+      <p class="module-subtitle">Upload an audio file and turn speech into editable text in one clean workspace.</p>
+      <div class="module-meta">
+        <span class="module-badge">{{ selectedFileName || 'No file selected' }}</span>
+      </div>
+    </section>
 
-      @if (selectedFileName) {
-        <p><strong>Selected:</strong> {{ selectedFileName }}</p>
-      }
+    <ion-card class="module-card">
+      <ion-card-content>
+        <div class="speech-form">
+          <label class="upload-chip upload-chip--wide">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+            <span>{{ selectedFileName || 'Choose Audio File' }}</span>
+            <input type="file" accept="audio/*" (change)="onAudioSelected($event)" />
+          </label>
 
-      <ion-item>
-        <ion-label position="stacked">Transcribed Text</ion-label>
-        <ion-textarea [value]="transcribedText" rows="6" readonly="true"></ion-textarea>
-      </ion-item>
+          <label class="field-label" for="transcribed-text">Transcribed Text</label>
+          <ion-item lines="none" class="conversation-textarea">
+            <ion-textarea
+              id="transcribed-text"
+              [value]="transcribedText"
+              rows="7"
+              readonly="true"
+              placeholder="Your transcript will appear here..."
+            ></ion-textarea>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-      <ion-button expand="block" fill="outline" class="ion-margin-top" (click)="back()">Back</ion-button>
-    </ion-card-content>
-  </ion-card>
+    <ion-button expand="block" fill="outline" class="back-button" (click)="back()">Back</ion-button>
+  </div>
 </ion-content>
