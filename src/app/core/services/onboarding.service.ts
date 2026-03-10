@@ -6,6 +6,7 @@ import {
   CommonSentencesPayload,
   ConversationScriptPayload,
   PronunciationTipsPayload,
+  EnglishLearningTipsPayload,
   OnboardingAnswer,
   OnboardingQuestion,
 } from '../models/api.models';
@@ -53,5 +54,10 @@ export class OnboardingService {
   getPronunciationTips(day?: number) {
     const path = day ? `/onboarding/pronunciation-tips?day=${day}` : '/onboarding/pronunciation-tips';
     return this.api.get<PronunciationTipsPayload>(path);
+  }
+
+  getEnglishLearningTips(day?: number) {
+    const path = day ? `/onboarding/english-learning-tips?day=${day}` : '/onboarding/english-learning-tips';
+    return this.api.get<EnglishLearningTipsPayload>(path);
   }
 }

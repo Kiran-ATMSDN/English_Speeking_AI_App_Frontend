@@ -68,6 +68,12 @@ export const routes: Routes = [
       import('./pages/pronunciation-tips/pronunciation-tips.page').then((m) => m.PronunciationTipsPage),
   },
   {
+    path: 'english-learning-tips',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/english-learning-tips/english-learning-tips.page').then((m) => m.EnglishLearningTipsPage),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),

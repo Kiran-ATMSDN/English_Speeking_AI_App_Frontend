@@ -122,6 +122,21 @@ export interface PronunciationTipsPayload {
   tips: PronunciationTip[];
 }
 
+export interface EnglishLearningTip {
+  title: string;
+  description: string;
+  actionStep?: string | null;
+}
+
+export interface EnglishLearningTipsPayload {
+  dayNumber: number;
+  totalDays: number;
+  tipsPerDay: number;
+  level: 'Simple' | 'Intermediate' | 'Advanced';
+  date: string;
+  tips: EnglishLearningTip[];
+}
+
 export interface SubscriptionPlan {
   id: number;
   name: string;
