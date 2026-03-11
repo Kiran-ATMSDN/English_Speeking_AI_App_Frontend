@@ -7,33 +7,49 @@
 <ion-content class="module-shell">
   <div class="module-page">
     <section class="module-hero">
-      <span class="module-kicker">Grammar Drill</span>
-      <h1>Grammar Lessons</h1>
-      <p class="module-subtitle">Clear rules, practical examples, and a cleaner way to revise one lesson per day.</p>
-      <div class="module-meta">
-        <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
-        <span class="module-badge">{{ level }}</span>
-      </div>
-      <div class="module-controls">
-        <ion-button size="small" (click)="speakLesson()" [disabled]="loading || !lesson.title || speakingLesson">
-          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
-          Play Lesson
-        </ion-button>
-        <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingLesson">
-          <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
-          Stop
-        </ion-button>
-      </div>
-      <div class="module-nav">
-        <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
-          <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
-          Prev
-        </ion-button>
-        <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
-        <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
-          Next
-          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-        </ion-button>
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <span class="module-kicker">Grammar Drill</span>
+          <h1>Grammar Lessons</h1>
+          <p class="module-subtitle">Clear rules, practical examples, and a cleaner way to revise one lesson per day.</p>
+          <div class="module-meta">
+            <span class="module-badge">Day {{ dayNumber }} / {{ totalDays }}</span>
+            <span class="module-badge">{{ level }}</span>
+          </div>
+          <div class="module-controls">
+            <ion-button size="small" (click)="speakLesson()" [disabled]="loading || !lesson.title || speakingLesson">
+              <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+              Play Lesson
+            </ion-button>
+            <ion-button size="small" fill="outline" color="medium" (click)="stopSpeaking()" [disabled]="!speakingLesson">
+              <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
+              Stop
+            </ion-button>
+          </div>
+          <div class="module-nav">
+            <ion-button size="small" fill="outline" (click)="previousDay()" [disabled]="loading || currentDay <= 1">
+              <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+              Prev
+            </ion-button>
+            <ion-button size="small" fill="outline" (click)="goToDayOne()" [disabled]="loading">Day 1</ion-button>
+            <ion-button size="small" fill="outline" (click)="nextDay()" [disabled]="loading || currentDay >= totalDays">
+              Next
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <app-coach-avatar
+          eyebrow="AI Study Buddy"
+          title="Coach Mira"
+          subtitle="Tap me and I will read the lesson and my voice options for you."
+          [tip]="coachTip"
+          [mood]="coachMood"
+          [actions]="avatarActions"
+          avatarLabel="Tap avatar to hear the lesson and avatar options"
+          (avatarTap)="onAvatarTap()"
+          (actionTap)="onAvatarAction($event)"
+        ></app-coach-avatar>
       </div>
     </section>
 

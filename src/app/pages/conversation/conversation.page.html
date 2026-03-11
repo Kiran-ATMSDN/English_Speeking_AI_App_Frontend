@@ -7,22 +7,38 @@
 <ion-content class="module-shell">
   <div class="module-page">
     <section class="module-hero">
-      <span class="module-kicker">Live Practice</span>
-      <h1>Conversation Session</h1>
-      <p class="module-subtitle">Start a session, send text or audio, and continue the chat with saved history.</p>
-      <div class="module-meta">
-        <span class="module-badge">Session {{ sessionId || 'Not started' }}</span>
-        <span class="module-badge">{{ history.length }} messages</span>
-      </div>
-      <div class="module-controls">
-        <ion-button (click)="startSession()" [disabled]="loading">
-          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
-          Start Session
-        </ion-button>
-        <ion-button fill="outline" (click)="loadHistory()" [disabled]="!sessionId || loading">
-          <ion-icon name="time-outline" slot="start"></ion-icon>
-          History
-        </ion-button>
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <span class="module-kicker">Live Practice</span>
+          <h1>Conversation Session</h1>
+          <p class="module-subtitle">Start a session, send text or audio, and continue the chat with saved history.</p>
+          <div class="module-meta">
+            <span class="module-badge">Session {{ sessionId || 'Not started' }}</span>
+            <span class="module-badge">{{ history.length }} messages</span>
+          </div>
+          <div class="module-controls">
+            <ion-button (click)="startSession()" [disabled]="loading">
+              <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+              Start Session
+            </ion-button>
+            <ion-button fill="outline" (click)="loadHistory()" [disabled]="!sessionId || loading">
+              <ion-icon name="time-outline" slot="start"></ion-icon>
+              History
+            </ion-button>
+          </div>
+        </div>
+
+        <app-coach-avatar
+          eyebrow="AI Conversation Coach"
+          title="Coach Mira"
+          subtitle="Tap me and I will explain this speaking room or read the latest reply."
+          [tip]="coachTip"
+          [mood]="coachMood"
+          [actions]="avatarActions"
+          avatarLabel="Tap avatar to hear conversation guidance and avatar options"
+          (avatarTap)="onAvatarTap()"
+          (actionTap)="onAvatarAction($event)"
+        ></app-coach-avatar>
       </div>
     </section>
 

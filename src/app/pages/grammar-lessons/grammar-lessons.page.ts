@@ -12,8 +12,10 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { GrammarLesson } from '../../core/models/api.models';
+import { CoachAction, CoachAvatarComponent, CoachMood } from '../../core/components/coach-avatar/coach-avatar.component';
 import { OnboardingService } from '../../core/services/onboarding.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { pickFemaleEnglishVoice } from '../../core/utils/speech-voice.util';
 import { getErrorMessage } from '../../core/utils/error.util';
 
 type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
@@ -25,6 +27,7 @@ type DifficultyLevel = 'Simple' | 'Intermediate' | 'Advanced';
   standalone: true,
   imports: [
     CommonModule,
+    CoachAvatarComponent,
     IonButton,
     IonCard,
     IonCardContent,
@@ -48,12 +51,41 @@ export class GrammarLessonsPage implements OnInit {
     formula: '',
     examples: [],
   };
+  avatarActions: CoachAction[] = [
+    { id: 'lesson', label: 'Read Lesson' },
+    { id: 'examples', label: 'Read Examples' },
+    { id: 'options', label: 'Read Options' },
+  ];
 
   constructor(
     private readonly router: Router,
     private readonly onboardingService: OnboardingService,
     private readonly notificationService: NotificationService,
   ) {}
+
+  get coachMood(): CoachMood {
+    if (this.speakingLesson) {
+      return 'speaking';
+    }
+
+    if (this.loading) {
+      return 'thinking';
+    }
+
+    return 'cheerful';
+  }
+
+  get coachTip(): string {
+    if (this.speakingLesson) {
+      return 'I am reading the full lesson aloud. Follow the rhythm and repeat the examples after me.';
+    }
+
+    if (this.loading) {
+      return 'I am preparing your next grammar drill with examples you can replay.';
+    }
+
+    return `Tap my avatar to hear this lesson and the available voice options. We are on day ${this.dayNumber} of ${this.totalDays}.`;
+  }
 
   ngOnInit(): void {
     // Data load is handled in ionViewWillEnter.
@@ -90,12 +122,31 @@ export class GrammarLessonsPage implements OnInit {
     this.fetchLesson(1);
   }
 
-  speakLesson(): void {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
+  onAvatarTap(): void {
+    if (!this.lesson.title) {
       return;
     }
 
+    const intro = `Hello, I am Coach Mira. Today we are learning ${this.lesson.title}. ${this.lesson.explanation}. `;
+    const options = 'Avatar options are: Read Lesson, Read Examples, and Read Options.';
+    this.speakText(`${intro}${options}`);
+  }
+
+  onAvatarAction(actionId: string): void {
+    if (actionId === 'lesson') {
+      this.speakLesson();
+      return;
+    }
+
+    if (actionId === 'examples') {
+      this.readAllExamples();
+      return;
+    }
+
+    this.speakText('You can use Play Lesson, Stop, Previous day, Day 1, and Next. You can also tap Read Lesson or Read Examples on my card.');
+  }
+
+  speakLesson(): void {
     if (!this.lesson.title) {
       return;
     }
@@ -107,21 +158,7 @@ export class GrammarLessonsPage implements OnInit {
       this.lesson.formula || 'Not available'
     }. ${examplesText}`;
 
-    const utterance = new SpeechSynthesisUtterance(speechText);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.95;
-    utterance.onstart = () => {
-      this.speakingLesson = true;
-    };
-    utterance.onend = () => {
-      this.speakingLesson = false;
-    };
-    utterance.onerror = () => {
-      this.speakingLesson = false;
-    };
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+    this.speakText(speechText);
   }
 
   speakExample(example: string): void {
@@ -130,16 +167,7 @@ export class GrammarLessonsPage implements OnInit {
       return;
     }
 
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.95;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+    this.speakText(text, false);
   }
 
   stopSpeaking(): void {
@@ -148,6 +176,53 @@ export class GrammarLessonsPage implements OnInit {
     }
     window.speechSynthesis.cancel();
     this.speakingLesson = false;
+  }
+
+  private readAllExamples(): void {
+    const text = (this.lesson.examples || []).map((example, index) => `Example ${index + 1}. ${example}`).join(' ');
+    if (!text) {
+      return;
+    }
+    this.speakText(text);
+  }
+
+  private speakText(text: string, trackSpeaking = true): void {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      void this.notificationService.error('Text-to-speech is not supported on this device/browser.');
+      return;
+    }
+
+    const speechText = String(text || '').trim();
+    if (!speechText) {
+      return;
+    }
+
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.95;
+    utterance.pitch = 1.08;
+
+    const selectedVoice = pickFemaleEnglishVoice(synth.getVoices());
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      utterance.lang = selectedVoice.lang || utterance.lang;
+    }
+
+    if (trackSpeaking) {
+      utterance.onstart = () => {
+        this.speakingLesson = true;
+      };
+      utterance.onend = () => {
+        this.speakingLesson = false;
+      };
+      utterance.onerror = () => {
+        this.speakingLesson = false;
+      };
+    }
+
+    synth.cancel();
+    synth.speak(utterance);
   }
 
   private fetchLesson(day?: number): void {

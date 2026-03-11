@@ -1,3 +1,14 @@
+.hero-layout {
+  display: grid;
+  gap: 18px;
+  align-items: center;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 14px;
+}
+
 .conversation-form {
   display: grid;
   gap: 14px;
@@ -78,4 +89,10 @@
   margin: 0;
   line-height: 1.55;
   color: var(--app-ink);
+}
+
+@media (min-width: 960px) {
+  .hero-layout {
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, 320px);
+  }
 }
